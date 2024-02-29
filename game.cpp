@@ -20,7 +20,7 @@ void game::run() {
 	while (m_window.isOpen()) {
 		m_controller->handle_input(m_window);
 		for (players::iterator it = m_players.begin(); it != m_players.end(); ++it) {
-			m_window.draw(it->get_shape());
+			it->draw(m_window);
 		}
 		m_window.display();
 	}

@@ -2,18 +2,35 @@
 
 #include <iostream>
 
+void visual::init(const sf::Vector2f &in_pos) {
+	sf::Vector2f cur_pos = in_pos;
+	sf::Vector2f size = sf::Vector2f(m_side_size, m_side_size);
+
+	for (size_t i = 0; i < m_shape_count; ++i) {
+		sf::RectangleShape shape(size);
+		shape.setPosition(cur_pos);
+		m_shapes.push_back(shape);
+
+		cur_pos.y += m_side_size;
+		cur_pos.y += m_padding;
+	}
+}
+
 player::player() {
-	m_position.x = 200.f;
+	m_position.x = 100.f;
 	m_position.y = 200.f;
-	sf::Vector2f size(100.f, 100.f);
-	m_shape = sf::RectangleShape(size);
-	m_shape.setPosition(m_position);
+	m_visual.init(m_position);
+}
 
-	std::cout << "Origin x = " << m_shape.getOrigin().x << " y = " << m_shape.getOrigin().y << std::endl;
-	std::cout << "Position x = " << m_shape.getPosition().x << " y = " << m_shape.getPosition().y << std::endl;
+player::~player() {}
+
+void player::draw(sf::RenderWindow &in_window) {
+	for (shapes::iterator it = m_visual.m_shapes.begin(); it != m_visual.m_shapes.end(); ++it) {
+		in_window.draw(*it);
+	}
+}
+
+void player::update() {
 
 }
 
-player::~player() {
-
-}
