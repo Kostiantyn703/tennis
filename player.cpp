@@ -17,7 +17,7 @@ void visual::init(const sf::Vector2f &in_pos) {
 }
 
 player::player() {
-	m_position.x = 100.f;
+	m_position.x = 50.f;
 	m_position.y = 200.f;
 	m_visual.init(m_position);
 }
@@ -30,7 +30,14 @@ void player::draw(sf::RenderWindow &in_window) {
 	}
 }
 
-void player::update() {
+void player::update(float in_delta_time) {
+	for (shapes::iterator it = m_visual.m_shapes.begin(); it != m_visual.m_shapes.end(); ++it) {
+		float cur_x = it->getPosition().x;
+		float cur_y = it->getPosition().y;
+		cur_y += in_delta_time;
+		sf::Vector2f new_pos(cur_x, cur_y);
 
+		it->setPosition(new_pos);
+	}
 }
 
