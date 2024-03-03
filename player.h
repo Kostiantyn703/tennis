@@ -27,4 +27,5 @@ public:
 private:
 	visual m_visual;
 	sf::Vector2f m_position;
+	float m_speed = 50.f;
 };
