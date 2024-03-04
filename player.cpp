@@ -41,4 +41,3 @@ void player::update(float in_delta_time) {
 		it->setPosition(new_pos);
 	}
 }
-

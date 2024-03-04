@@ -16,6 +16,9 @@ game::game() {
 	m_players.push_back(player(player_two_pos));
 
 	m_controller->m_owner = &m_players[0];
+
+	sf::Vector2f ball_pos(WINDOW_WIDTH * 0.5f, WINDOW_HEIGHT * 0.5f);
+	m_ball.set_position(ball_pos);
 }
 
 game::~game() {}
@@ -36,6 +39,7 @@ void game::run() {
 		for (players::iterator it = m_players.begin(); it != m_players.end(); ++it) {
 			it->draw(m_window);
 		}
+		m_ball.draw(m_window);
 		m_window.display();
 	}
 }

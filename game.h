@@ -6,6 +6,7 @@
 
 #include "controller.h"
 #include "player.h"
+#include "ball.h"
 
 constexpr size_t WINDOW_HEIGHT = 600;
 constexpr size_t WINDOW_WIDTH = 800;
@@ -24,4 +25,6 @@ private:
 
 	std::unique_ptr<controller> m_controller;
 	players m_players;
+
+	ball m_ball;
 };
