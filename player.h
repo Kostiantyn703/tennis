@@ -24,8 +24,11 @@ public:
 	void draw(sf::RenderWindow &in_window);
 	void update(float in_delta_time);
 
+	void set_direction(int in_val) { m_direction = in_val; }
+
 private:
 	visual m_visual;
 	sf::Vector2f m_position;
-	float m_speed = 50.f;
+	float m_speed = 400.f;
+	int m_direction = 0;
 };
