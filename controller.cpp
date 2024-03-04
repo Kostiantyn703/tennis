@@ -15,13 +15,16 @@ bool controller::handle_input(sf::RenderWindow &in_window) {
 		if (!m_owner) break;
 		if (cur_event.KeyReleased) {
 			m_owner->set_direction(0);
+			//break;
 		}
 		if (m_owner) {
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
 				m_owner->set_direction(-1);
+				//break;
 			}
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
 				m_owner->set_direction(1);
+				//break;
 			}
 		}
 	}

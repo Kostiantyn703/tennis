@@ -16,9 +16,10 @@ void visual::init(const sf::Vector2f &in_pos) {
 	}
 }
 
-player::player() {
-	m_position.x = 50.f;
-	m_position.y = 200.f;
+player::player(sf::Vector2f in_pos) {
+	m_speed = 400.f;
+	m_direction = 0;
+	m_position = in_pos;
 	m_visual.init(m_position);
 }
 

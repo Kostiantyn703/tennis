@@ -9,7 +9,11 @@ game::game() {
 
 	m_controller = std::make_unique<controller>();
 	
-	m_players.push_back(player());
+	sf::Vector2f player_one_pos(50.f, WINDOW_HEIGHT * 0.35f);
+	sf::Vector2f player_two_pos(WINDOW_WIDTH - 70.f, WINDOW_HEIGHT * 0.65f);
+
+	m_players.push_back(player(player_one_pos));
+	m_players.push_back(player(player_two_pos));
 
 	m_controller->m_owner = &m_players[0];
 }
@@ -22,14 +26,16 @@ void game::run() {
 		float cur_time = m_clock.getElapsedTime().asSeconds();
 		float delta_time = cur_time - last_time;
 		last_time = cur_time;
-		
+
 		m_controller->handle_input(m_window);
-		
-		//for (players::iterator it = m_players.begin(); it != m_players.end(); ++it) {
-		m_players.begin()->update(delta_time);
+		for (players::iterator it = m_players.begin(); it != m_players.end(); ++it) {
+			it->update(delta_time);
+		}
 
 		m_window.clear();
-		m_players.begin()->draw(m_window);
+		for (players::iterator it = m_players.begin(); it != m_players.end(); ++it) {
+			it->draw(m_window);
+		}
 		m_window.display();
 	}
 }
