@@ -40,4 +40,5 @@ void player::update(float in_delta_time) {
 
 		it->setPosition(new_pos);
 	}
+	m_position.y += m_speed * m_direction * in_delta_time;
 }
