@@ -1,6 +1,6 @@
 #pragma once
 
-class RenderWindow;
+#include <SFML/Graphics.hpp>
 
 class idrawable {
 public:
@@ -14,6 +14,14 @@ public:
 	virtual ~iupdatable() {}
 
 	virtual void update(float delta_time) = 0;
+};
+
+class icontrollable {
+public:
+	virtual ~icontrollable() {}
+
+	virtual void set_movement(int in_val) = 0;
+
 };
 
 class object : public idrawable, public iupdatable {
