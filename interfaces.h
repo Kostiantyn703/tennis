@@ -22,6 +22,9 @@ public:
 
 	virtual void draw(sf::RenderWindow &in_window) = 0;
 	virtual void update(float delta_time) = 0;
+
+	virtual void intersect(object &in_obj) = 0;
+	virtual void on_intersect() = 0;
 protected:
 	object_type m_type; 
 };

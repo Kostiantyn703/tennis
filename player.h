@@ -24,6 +24,9 @@ public:
 	virtual void draw(sf::RenderWindow &in_window) override;
 	virtual void update(float in_delta_time) override;
 
+	virtual void intersect(object &in_obj) override;
+	virtual void on_intersect() override;
+
 	const sf::Vector2f &get_position() const { return m_position; }
 	virtual void set_movement(int in_val) override { m_cur_speed = PLAYER_MAX_SPEED * in_val; }
 

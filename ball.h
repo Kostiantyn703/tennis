@@ -11,8 +11,11 @@ public:
 	void set_position(const sf::Vector2f in_position);
 	size_t get_player_idx() const { return m_player_idx; }
 
-	void update(float delta_time);
-	void draw(sf::RenderWindow &in_window);
+	virtual void update(float delta_time) override;
+	virtual void draw(sf::RenderWindow &in_window) override;
+
+	virtual void intersect(object &in_obj) override {}
+	virtual void on_intersect() override {}
 
 private:
 	sf::CircleShape m_shape;

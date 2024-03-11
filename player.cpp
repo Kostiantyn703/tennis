@@ -37,3 +37,11 @@ void player::update(float in_delta_time) {
 	}
 	m_position.y += m_cur_speed * in_delta_time;
 }
+
+void player::intersect(object &in_obj) {
+
+}
+
+void player::on_intersect() {
+
+}
