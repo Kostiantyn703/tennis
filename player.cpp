@@ -31,12 +31,8 @@ void player::draw(sf::RenderWindow &in_window) {
 
 void player::update(float in_delta_time) {
 	for (shapes::iterator it = m_visual.m_shapes.begin(); it != m_visual.m_shapes.end(); ++it) {
-		float cur_x = it->getPosition().x;
-		float cur_y = it->getPosition().y;
-		cur_y += m_cur_speed * in_delta_time;
-		sf::Vector2f new_pos(cur_x, cur_y);
-
-		it->setPosition(new_pos);
+		sf::Vector2f offset(0.f, m_cur_speed * in_delta_time);
+		it->move(offset);
 	}
 	m_position.y += m_cur_speed * in_delta_time;
 }

@@ -1,5 +1,4 @@
 #include "game.h"
-
 #include <iostream>
 
 const char *TITLE = "TENNIS";
@@ -51,14 +50,18 @@ void game::run() {
 			m_ball.set_position(m_players[m_ball.get_player_idx()].get_position());
 		}
 
-		m_window.clear();
-		for (players::iterator it = m_players.begin(); it != m_players.end(); ++it) {
-			it->draw(m_window);
-		}
-		m_ball.draw(m_window);
-		for (std::vector<border>::const_iterator it = m_borders.begin(); it != m_borders.end(); ++it) {
-			m_window.draw(it->m_shape);
-		}
-		m_window.display();
+		render();
 	}
+}
+
+void game::render() {
+	m_window.clear();
+	for (players::iterator it = m_players.begin(); it != m_players.end(); ++it) {
+		it->draw(m_window);
+	}
+	m_ball.draw(m_window);
+	for (std::vector<border>::const_iterator it = m_borders.begin(); it != m_borders.end(); ++it) {
+		m_window.draw(it->m_shape);
+	}
+	m_window.display();
 }

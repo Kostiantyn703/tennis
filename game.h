@@ -24,6 +24,8 @@ public:
 	void run();
 
 private:
+	void render();
+
 	std::vector<border> m_borders;
 
 	sf::RenderWindow m_window;
