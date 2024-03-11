@@ -1,11 +1,12 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include "interfaces.h"
 
-class ball {
+class ball : public object {
 public:
 	ball();
-	~ball();
+	virtual ~ball();
 
 	void set_position(const sf::Vector2f in_position);
 	size_t get_player_idx() const { return m_player_idx; }

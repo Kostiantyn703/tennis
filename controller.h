@@ -15,5 +15,4 @@ public:
 	bool handle_input(sf::RenderWindow &in_window);
 private:
 	icontrollable *m_owner = nullptr;
-
 };
