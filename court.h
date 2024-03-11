@@ -20,9 +20,10 @@ public:
 	virtual void draw(sf::RenderWindow &in_window) override;
 	virtual void update(float delta_time) override;
 
-	virtual void intersect(object &in_obj) override {}
+	virtual void intersect(object *in_obj) override {}
 	virtual void on_intersect() override {}
 
+	const sf::RectangleShape &get_shape() const { return m_shape; }
 
 private:
 	sf::RectangleShape m_shape;

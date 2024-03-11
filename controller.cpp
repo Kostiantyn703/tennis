@@ -17,10 +17,10 @@ bool controller::handle_input(sf::RenderWindow &in_window) {
 			m_owner->set_movement(0);
 		}
 		if (m_owner) {
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && !m_owner->upper_block) {
 				m_owner->set_movement(-1);
 			}
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && !m_owner->lower_block) {
 				m_owner->set_movement(1);
 			}
 		}

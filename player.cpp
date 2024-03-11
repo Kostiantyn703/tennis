@@ -2,10 +2,11 @@
 
 #include <iostream>
 
+#include "court.h"
+
 void visual::init(const sf::Vector2f &in_pos) {
 	sf::Vector2f cur_pos = in_pos;
 	sf::Vector2f size = sf::Vector2f(m_side_size, m_side_size);
-
 	for (size_t i = 0; i < m_shape_count; ++i) {
 		sf::RectangleShape shape(size);
 		shape.setPosition(cur_pos);
@@ -38,8 +39,23 @@ void player::update(float in_delta_time) {
 	m_position.y += m_cur_speed * in_delta_time;
 }
 
-void player::intersect(object &in_obj) {
-
+void player::intersect(object *in_obj) {
+	if (border *bord = dynamic_cast<border*>(in_obj)) {
+		bool inter_upper = m_visual.m_shapes.begin()->getGlobalBounds().intersects(bord->get_shape().getGlobalBounds());
+		bool inter_lower = (m_visual.m_shapes.end() - 1)->getGlobalBounds().intersects(bord->get_shape().getGlobalBounds());
+		if (inter_upper) {
+			set_movement(0);
+			upper_block = true;
+			return;
+		}
+		if (inter_lower) {
+			set_movement(0);
+			lower_block = true;
+			return;
+		}
+		upper_block = false;
+		lower_block = false;
+	}
 }
 
 void player::on_intersect() {

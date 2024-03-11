@@ -14,7 +14,7 @@ public:
 	virtual void update(float delta_time) override;
 	virtual void draw(sf::RenderWindow &in_window) override;
 
-	virtual void intersect(object &in_obj) override {}
+	virtual void intersect(object *in_obj) override {}
 	virtual void on_intersect() override {}
 
 private:
