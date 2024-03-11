@@ -16,7 +16,8 @@ void visual::init(const sf::Vector2f &in_pos) {
 	}
 }
 
-player::player(sf::Vector2f in_pos) {
+player::player(const sf::Vector2f &in_pos) {
+	m_type = object_type::OT_PADDLE;
 	m_position = in_pos;
 	m_visual.init(m_position);
 }

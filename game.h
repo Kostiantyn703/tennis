@@ -11,7 +11,7 @@ class game {
 
 public:
 	game();
-	~game();
+	~game() {}
 
 	void run();
 
@@ -20,10 +20,6 @@ private:
 
 	sf::RenderWindow m_window;
 	sf::Clock m_clock;
-
 	std::unique_ptr<controller> m_controller;
-
 	std::unique_ptr<court> m_court;
-
-	bool is_active = false;
 };

@@ -1,6 +1,7 @@
 #include "ball.h"
 
 ball::ball() {
+	m_type = object_type::OT_BALL;
 	m_shape.setRadius(10.f);
 }
 

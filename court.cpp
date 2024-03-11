@@ -3,6 +3,7 @@
 #include "defs.h"
 
 border::border(const sf::Vector2f & in_pos, const sf::Vector2f &in_size) {
+	m_type = object_type::OT_BORDER;
 	m_shape.setPosition(in_pos);
 	m_shape.setSize(in_size);
 }

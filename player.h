@@ -18,7 +18,7 @@ struct visual {
 
 class player : public object, public icontrollable {
 public:
-	player(sf::Vector2f in_pos);
+	player(const sf::Vector2f &in_pos);
 	~player();
 
 	virtual void draw(sf::RenderWindow &in_window) override;

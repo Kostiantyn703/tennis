@@ -2,6 +2,13 @@
 
 #include <SFML/Graphics.hpp>
 
+enum object_type {
+	OT_BORDER,
+	OT_BALL,
+	OT_PADDLE,
+	OT_NONE
+};
+
 class icontrollable {
 public:
 	virtual ~icontrollable() {}
@@ -15,4 +22,6 @@ public:
 
 	virtual void draw(sf::RenderWindow &in_window) = 0;
 	virtual void update(float delta_time) = 0;
+protected:
+	object_type m_type; 
 };

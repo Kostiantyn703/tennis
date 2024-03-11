@@ -1,5 +1,5 @@
 #include "game.h"
-#include <iostream>
+
 #include "defs.h"
 
 game::game() {
@@ -11,8 +11,6 @@ game::game() {
 	m_court->init();
 	m_court->init_player(*m_controller.get());
 }
-
-game::~game() {}
 
 void game::run() {
 	float last_time = 0.f;
