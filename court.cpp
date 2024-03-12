@@ -50,7 +50,9 @@ void court::update(float delta_time) {
 	for (objects::iterator it = m_objects.begin(); it != m_objects.end(); ++it) {
 		(*it)->update(delta_time);
 		for (objects::iterator local_it = m_objects.begin(); local_it != m_objects.end(); ++local_it) {
-			(*it)->intersect(*local_it);
+			if ((*it)->intersect(*local_it)) {
+				break;
+			}
 		}
 	}
 }

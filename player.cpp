@@ -39,23 +39,16 @@ void player::update(float in_delta_time) {
 	m_position.y += m_cur_speed * in_delta_time;
 }
 
-void player::intersect(object *in_obj) {
+bool player::intersect(object *in_obj) {
 	if (border *bord = dynamic_cast<border*>(in_obj)) {
-		bool inter_upper = m_visual.m_shapes.begin()->getGlobalBounds().intersects(bord->get_shape().getGlobalBounds());
-		bool inter_lower = (m_visual.m_shapes.end() - 1)->getGlobalBounds().intersects(bord->get_shape().getGlobalBounds());
-		if (inter_upper) {
+		upper_block = m_visual.m_shapes.begin()->getGlobalBounds().intersects(bord->get_shape().getGlobalBounds());
+		lower_block = (m_visual.m_shapes.end() - 1)->getGlobalBounds().intersects(bord->get_shape().getGlobalBounds());
+		if (upper_block || lower_block) {
 			set_movement(0);
-			upper_block = true;
-			return;
+			return true;
 		}
-		if (inter_lower) {
-			set_movement(0);
-			lower_block = true;
-			return;
-		}
-		upper_block = false;
-		lower_block = false;
 	}
+	return false;
 }
 
 void player::on_intersect() {
