@@ -4,19 +4,18 @@
 
 void visual::init(const sf::Vector2f &in_pos) {
 	sf::Vector2f cur_pos = in_pos;
-	sf::Vector2f size = sf::Vector2f(m_side_size, m_side_size);
+	sf::Vector2f size = sf::Vector2f(m_side_width, m_side_height);
 	for (size_t i = 0; i < m_shape_count; ++i) {
 		sf::RectangleShape shape(size);
 		shape.setPosition(cur_pos);
 		m_shapes.push_back(shape);
 
-		cur_pos.y += m_side_size;
+		cur_pos.y += m_side_height;
 		cur_pos.y += m_padding;
 	}
 }
 
 player::player(const sf::Vector2f &in_pos) {
-	m_type = object_type::OT_PADDLE;
 	m_position = in_pos;
 	m_visual.init(m_position);
 }
@@ -53,8 +52,14 @@ bool player::intersect(object *in_obj) {
 	return false;
 }
 
-void player::on_intersect() {
-
+bool player::on_intersect(const sf::FloatRect &in_rect) {
+	for (size_t i = 0; i < m_visual.m_shape_count; ++i) {
+		if (m_visual.m_shapes[i].getGlobalBounds().intersects(in_rect)) {
+			std::cout << "Hit " << i << std::endl;
+			return true;
+		}
+	}
+	return false;
 }
 
 void player::launch() {

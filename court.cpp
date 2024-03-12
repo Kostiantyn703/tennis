@@ -3,7 +3,6 @@
 #include "defs.h"
 
 border::border(const sf::Vector2f & in_pos, const sf::Vector2f &in_size) {
-	m_type = object_type::OT_BORDER;
 	m_shape.setPosition(in_pos);
 	m_shape.setSize(in_size);
 }
@@ -45,8 +44,8 @@ void court::init_player(controller &out_controller) {
 	cur_player->m_ball_slot = cur_ball;
 
 	// TODO: temporary debug, remove later
-	//sf::Vector2f player_two_pos(WINDOW_WIDTH - 70.f, WINDOW_HEIGHT * 0.65f);
-	sf::Vector2f player_two_pos(WINDOW_WIDTH - 70.f, WINDOW_HEIGHT * 0.25f);
+	//sf::Vector2f player_two_pos(WINDOW_WIDTH - 60.f, WINDOW_HEIGHT * 0.65f);
+	sf::Vector2f player_two_pos(WINDOW_WIDTH - 60.f, WINDOW_HEIGHT * 0.25f);
 	player *temp_player = new player(player_two_pos);
 	cur_player->m_player_slot = temp_player;
 	m_objects.push_back(temp_player);

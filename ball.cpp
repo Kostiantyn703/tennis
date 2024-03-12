@@ -2,11 +2,10 @@
 #include "defs.h"
 #include "game.h"
 
-constexpr float PADDLE_OFFSET_X = 20.f;
+constexpr float PADDLE_OFFSET_X = 10.f;
 constexpr float PADDLE_OFFSET_Y = 45.f;
 
 ball::ball() {
-	m_type = object_type::OT_BALL;
 	m_shape.setRadius(10.f);
 }
 
@@ -14,7 +13,7 @@ ball::~ball() {}
 
 void ball::set_position(const sf::Vector2f in_position) {
 	sf::Vector2f new_pos = in_position;
-	// TODO: also depending on player idx 
+	// TODO: also depending on player idx set initial direction
 	m_player_idx == 0 ? (new_pos.x += PADDLE_OFFSET_X) : (new_pos.x -= PADDLE_OFFSET_X);
 	new_pos.y += PADDLE_OFFSET_Y;
 
@@ -38,6 +37,13 @@ bool ball::intersect(object *in_obj) {
 	if (border *bord = dynamic_cast<border*>(in_obj)) {
 		if (bord->get_shape().getGlobalBounds().intersects(m_shape.getGlobalBounds())) {
 			set_direction(-m_cur_direction);
+			return true;
+		}
+		return false;
+	}
+	if (player *paddle = dynamic_cast<player*>(in_obj)) {
+		if (paddle->on_intersect(m_shape.getGlobalBounds())) {
+			set_direction(-m_cur_direction + PLANE_ANGLE);
 			return true;
 		}
 	}

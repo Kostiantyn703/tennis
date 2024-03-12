@@ -17,7 +17,7 @@ public:
 	virtual void draw(sf::RenderWindow &in_window) override;
 
 	virtual bool intersect(object *in_obj) override;
-	virtual void on_intersect() override {}
+	virtual bool on_intersect(const sf::FloatRect &in_rect) override { return false; }
 	// TODO
 	bool is_sticked = true;
 	

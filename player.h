@@ -8,7 +8,8 @@ using shapes = std::vector<sf::RectangleShape>;
 
 struct visual {
 	float	m_padding = 1.f;
-	float	m_side_size = 20.f;
+	float	m_side_width = 10.f;
+	float	m_side_height = 20.f;
 	size_t	m_shape_count = 5;
 
 	shapes	m_shapes;
@@ -27,7 +28,7 @@ public:
 	virtual void update(float in_delta_time) override;
 
 	virtual bool intersect(object *in_obj) override;
-	virtual void on_intersect() override;
+	virtual bool on_intersect(const sf::FloatRect &in_rect) override;
 
 	virtual void set_movement(int in_val) override { m_cur_speed = PLAYER_MAX_SPEED * in_val; }
 	virtual void launch() override;

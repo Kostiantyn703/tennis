@@ -21,7 +21,7 @@ public:
 	virtual void update(float delta_time) override;
 
 	virtual bool intersect(object *in_obj) override { return false; }
-	virtual void on_intersect() override {}
+	virtual bool on_intersect(const sf::FloatRect &in_rect) override { return false; }
 
 	const sf::RectangleShape &get_shape() const { return m_shape; }
 
