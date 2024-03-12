@@ -1,7 +1,5 @@
 #include "player.h"
-
 #include <iostream>
-
 #include "court.h"
 
 void visual::init(const sf::Vector2f &in_pos) {
@@ -32,14 +30,15 @@ void player::draw(sf::RenderWindow &in_window) {
 }
 
 void player::update(float in_delta_time) {
-	for (shapes::iterator it = m_visual.m_shapes.begin(); it != m_visual.m_shapes.end(); ++it) {
-		sf::Vector2f offset(0.f, m_cur_speed * in_delta_time);
-		it->move(offset);
-	}
-	m_position.y += m_cur_speed * in_delta_time;
+	sf::Vector2f offset(0.f, m_cur_speed * in_delta_time);
+	move(offset);
 	if (m_ball_slot) {
 		m_ball_slot->set_position(m_position);
 	}
+	if (m_player_slot) {
+		m_player_slot->move(offset);
+	}
+
 }
 
 bool player::intersect(object *in_obj) {
@@ -63,4 +62,11 @@ void player::launch() {
 		m_ball_slot->is_sticked = false;
 		m_ball_slot = nullptr;
 	}
+}
+
+void player::move(sf::Vector2f &in_offset) {
+	for (shapes::iterator it = m_visual.m_shapes.begin(); it != m_visual.m_shapes.end(); ++it) {
+		it->move(in_offset);
+	}
+	m_position += in_offset;
 }

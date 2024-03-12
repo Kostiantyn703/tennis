@@ -29,13 +29,15 @@ public:
 	virtual bool intersect(object *in_obj) override;
 	virtual void on_intersect() override;
 
-	const sf::Vector2f &get_position() const { return m_position; }
-
 	virtual void set_movement(int in_val) override { m_cur_speed = PLAYER_MAX_SPEED * in_val; }
 	virtual void launch() override;
 
-	ball *m_ball_slot = nullptr;
+	const sf::Vector2f &get_position() const { return m_position; }
+	void move(sf::Vector2f &in_offset);
 
+	ball *m_ball_slot = nullptr;
+	// TODO: temp for test
+	player *m_player_slot = nullptr;
 private:
 	visual m_visual;
 	sf::Vector2f m_position;
