@@ -1,6 +1,8 @@
 #include "ball.h"
 #include "defs.h"
 #include "game.h"
+// TODO
+#include <iostream>
 
 constexpr float PADDLE_OFFSET_X = 10.f;
 constexpr float PADDLE_OFFSET_Y = 45.f;
@@ -42,8 +44,22 @@ bool ball::intersect(object *in_obj) {
 		return false;
 	}
 	if (player *paddle = dynamic_cast<player*>(in_obj)) {
-		if (paddle->on_intersect(m_shape.getGlobalBounds())) {
-			set_direction(-m_cur_direction + PLANE_ANGLE);
+		int idx = -1;
+		if (paddle->on_intersect(m_shape.getGlobalBounds(), idx)) {
+			if (idx < (PLAYER_SHAPE_COUNT / 2)) {
+				if (m_shape.getPosition().x < WINDOW_WIDTH / 2) {
+					set_direction(315.f);
+				} else if (m_shape.getPosition().x > WINDOW_WIDTH / 2) {
+					set_direction(225.f);
+				}
+			} else if (idx >= (PLAYER_SHAPE_COUNT / 2)) {
+				if (m_shape.getPosition().x < WINDOW_WIDTH / 2) {
+					set_direction(45.f);
+				}
+				else if (m_shape.getPosition().x > WINDOW_WIDTH / 2) {
+					set_direction(135.f);
+				}
+			}
 			return true;
 		}
 	}

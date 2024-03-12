@@ -7,6 +7,7 @@ constexpr size_t WINDOW_WIDTH	= 800;
 
 constexpr float BORDER_OFFSET		= 10.f;
 constexpr float PLAYER_MAX_SPEED	= 400.f;
+constexpr size_t PLAYER_SHAPE_COUNT	= 4;
 
 #include <cmath>
 

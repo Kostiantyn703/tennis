@@ -5,7 +5,7 @@
 void visual::init(const sf::Vector2f &in_pos) {
 	sf::Vector2f cur_pos = in_pos;
 	sf::Vector2f size = sf::Vector2f(m_side_width, m_side_height);
-	for (size_t i = 0; i < m_shape_count; ++i) {
+	for (size_t i = 0; i < PLAYER_SHAPE_COUNT; ++i) {
 		sf::RectangleShape shape(size);
 		shape.setPosition(cur_pos);
 		m_shapes.push_back(shape);
@@ -52,10 +52,10 @@ bool player::intersect(object *in_obj) {
 	return false;
 }
 
-bool player::on_intersect(const sf::FloatRect &in_rect) {
-	for (size_t i = 0; i < m_visual.m_shape_count; ++i) {
+bool player::on_intersect(const sf::FloatRect &in_rect, int &out_idx) {
+	for (int i = 0; i < PLAYER_SHAPE_COUNT; ++i) {
 		if (m_visual.m_shapes[i].getGlobalBounds().intersects(in_rect)) {
-			std::cout << "Hit " << i << std::endl;
+			out_idx = i;
 			return true;
 		}
 	}

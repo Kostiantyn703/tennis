@@ -21,5 +21,4 @@ public:
 	virtual void update(float delta_time) = 0;
 
 	virtual bool intersect(object *in_obj) = 0;
-	virtual bool on_intersect(const sf::FloatRect &in_rect) = 0;
 };
