@@ -14,6 +14,7 @@ public:
 	virtual ~icontrollable() {}
 
 	virtual void set_movement(int in_val) = 0;
+	virtual void launch() = 0;
 
 	bool upper_block = false;
 	bool lower_block = false;

@@ -17,12 +17,9 @@ public:
 	virtual bool intersect(object *in_obj) override { return false; }
 	virtual void on_intersect() override {}
 
+	bool is_sticked = true;
+	float m_cur_speed = 500.f;
 private:
-	sf::CircleShape m_shape;
-	sf::Vector2f m_position;
-
-	float m_paddle_offset_x = 20.f;
-	float m_paddle_offset_y = 50.f;
-
 	size_t m_player_idx = 0;
+	sf::CircleShape m_shape;
 };

@@ -37,6 +37,9 @@ void player::update(float in_delta_time) {
 		it->move(offset);
 	}
 	m_position.y += m_cur_speed * in_delta_time;
+	if (m_ball_slot) {
+		m_ball_slot->set_position(m_position);
+	}
 }
 
 bool player::intersect(object *in_obj) {
@@ -53,4 +56,11 @@ bool player::intersect(object *in_obj) {
 
 void player::on_intersect() {
 
+}
+
+void player::launch() {
+	if (m_ball_slot) {
+		m_ball_slot->is_sticked = false;
+		m_ball_slot = nullptr;
+	}
 }

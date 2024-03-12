@@ -24,11 +24,6 @@ court::~court() {
 }
 
 void court::init() {
-	sf::Vector2f ball_pos(WINDOW_WIDTH * 0.5f, WINDOW_HEIGHT * 0.5f);
-	ball *cur_ball = new ball;
-	cur_ball->set_position(ball_pos);
-	m_objects.push_back(cur_ball);
-
 	sf::Vector2f border_size(WINDOW_WIDTH, BORDER_OFFSET);
 
 	border *upper_border = new border(sf::Vector2f(0.f, 0.f), border_size);
@@ -42,6 +37,13 @@ void court::init_player(controller &out_controller) {
 	sf::Vector2f player_one_pos(50.f, WINDOW_HEIGHT * 0.25f);
 	player *cur_player = new player(player_one_pos);
 
+	sf::Vector2f ball_pos(WINDOW_WIDTH * 0.5f, WINDOW_HEIGHT * 0.5f);
+	ball *cur_ball = new ball;
+	cur_ball->set_position(ball_pos);
+	m_objects.push_back(cur_ball);
+
+	cur_player->m_ball_slot = cur_ball;
+	
 	out_controller.set_owner(*cur_player);
 	m_objects.push_back(cur_player);
 }

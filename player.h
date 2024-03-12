@@ -16,6 +16,8 @@ struct visual {
 	void init(const sf::Vector2f &in_pos);
 };
 
+class ball;
+
 class player : public object, public icontrollable {
 public:
 	player(const sf::Vector2f &in_pos);
@@ -28,7 +30,11 @@ public:
 	virtual void on_intersect() override;
 
 	const sf::Vector2f &get_position() const { return m_position; }
+
 	virtual void set_movement(int in_val) override { m_cur_speed = PLAYER_MAX_SPEED * in_val; }
+	virtual void launch() override;
+
+	ball *m_ball_slot = nullptr;
 
 private:
 	visual m_visual;

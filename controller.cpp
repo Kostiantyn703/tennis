@@ -23,6 +23,9 @@ bool controller::handle_input(sf::RenderWindow &in_window) {
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && !m_owner->lower_block) {
 				m_owner->set_movement(1);
 			}
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+				m_owner->launch();
+			}
 		}
 	}
 	return false;
