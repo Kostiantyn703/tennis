@@ -4,14 +4,14 @@
 
 void visual::init(const sf::Vector2f &in_pos) {
 	sf::Vector2f cur_pos = in_pos;
-	sf::Vector2f size = sf::Vector2f(m_side_width, m_side_height);
-	for (size_t i = 0; i < PLAYER_SHAPE_COUNT; ++i) {
+	sf::Vector2f size = sf::Vector2f(PADDLE_WIDTH, PADDLE_HEIGHT);
+	for (size_t i = 0; i < PADDLE_SHAPE_COUNT; ++i) {
 		sf::RectangleShape shape(size);
 		shape.setPosition(cur_pos);
 		m_shapes.push_back(shape);
 
-		cur_pos.y += m_side_height;
-		cur_pos.y += m_padding;
+		cur_pos.y += PADDLE_HEIGHT;
+		cur_pos.y += PADDLE_PADDING;
 	}
 }
 
@@ -37,7 +37,6 @@ void player::update(float in_delta_time) {
 	if (m_player_slot) {
 		m_player_slot->move(offset);
 	}
-
 }
 
 bool player::intersect(object *in_obj) {
@@ -53,7 +52,7 @@ bool player::intersect(object *in_obj) {
 }
 
 bool player::on_intersect(const sf::FloatRect &in_rect, int &out_idx) {
-	for (int i = 0; i < PLAYER_SHAPE_COUNT; ++i) {
+	for (int i = 0; i < PADDLE_SHAPE_COUNT; ++i) {
 		if (m_visual.m_shapes[i].getGlobalBounds().intersects(in_rect)) {
 			out_idx = i;
 			return true;
@@ -66,6 +65,16 @@ void player::launch() {
 	if (m_ball_slot) {
 		m_ball_slot->is_sticked = false;
 		m_ball_slot = nullptr;
+	}
+}
+
+void player::set_position(const sf::Vector2f &in_pos) {
+	m_position = in_pos;
+	sf::Vector2f cur_pos = in_pos;
+	for (shapes::iterator it = m_visual.m_shapes.begin(); it != m_visual.m_shapes.end(); ++it) {
+		it->setPosition(cur_pos);
+		cur_pos.y += PADDLE_HEIGHT;
+		cur_pos.y += PADDLE_PADDING;
 	}
 }
 

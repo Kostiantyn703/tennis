@@ -7,7 +7,11 @@ constexpr size_t WINDOW_WIDTH	= 800;
 
 constexpr float BORDER_OFFSET		= 10.f;
 constexpr float PLAYER_MAX_SPEED	= 400.f;
-constexpr size_t PLAYER_SHAPE_COUNT	= 4;
+
+constexpr size_t PADDLE_SHAPE_COUNT	= 4;
+constexpr float	PADDLE_PADDING		= 1.f;
+constexpr float PADDLE_WIDTH		= 10.f;
+constexpr float PADDLE_HEIGHT		= 25.f;
 
 #include <cmath>
 

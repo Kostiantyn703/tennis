@@ -1,4 +1,7 @@
 #include "court.h"
+
+#include <iostream>
+
 #include "controller.h"
 #include "defs.h"
 
@@ -13,7 +16,11 @@ void border::draw(sf::RenderWindow &in_window) {
 
 void border::update(float delta_time) {}
 
-court::court() {}
+court::court() {
+	m_players_pos.push_back(sf::Vector2f(50.f, WINDOW_HEIGHT * 0.25f));
+	m_players_pos.push_back(sf::Vector2f(WINDOW_WIDTH - 60.f, WINDOW_HEIGHT * 0.25f));
+	//m_players_pos.push_back(sf::Vector2f(WINDOW_WIDTH - 60.f, WINDOW_HEIGHT * 0.65f));
+}
 
 court::~court() {
 	for (objects::iterator it = m_objects.begin(); it != m_objects.end(); ++it) {
@@ -33,20 +40,21 @@ void court::init() {
 }
 
 void court::init_player(controller &out_controller) {
-	sf::Vector2f player_one_pos(50.f, WINDOW_HEIGHT * 0.25f);
-	player *cur_player = new player(player_one_pos);
+	player *cur_player = new player(m_players_pos[0]);
+	cur_player->set_idx(0);
+	m_player_one = cur_player;
 
 	sf::Vector2f ball_pos(WINDOW_WIDTH * 0.5f, WINDOW_HEIGHT * 0.5f);
 	ball *cur_ball = new ball;
 	cur_ball->set_position(ball_pos);
 	m_objects.push_back(cur_ball);
 
+	m_ball_slot = cur_ball;
 	cur_player->m_ball_slot = cur_ball;
 
 	// TODO: temporary debug, remove later
-	//sf::Vector2f player_two_pos(WINDOW_WIDTH - 60.f, WINDOW_HEIGHT * 0.65f);
-	sf::Vector2f player_two_pos(WINDOW_WIDTH - 60.f, WINDOW_HEIGHT * 0.25f);
-	player *temp_player = new player(player_two_pos);
+	player *temp_player = new player(m_players_pos[1]);
+	temp_player->set_idx(1);
 	cur_player->m_player_slot = temp_player;
 	m_objects.push_back(temp_player);
 	// ~ end TODO
@@ -62,6 +70,31 @@ void court::update(float delta_time) {
 			if ((*it)->intersect(*local_it)) {
 				break;
 			}
+		}
+	}
+	if (m_ball_slot->get_shape().getPosition().x < 0.f) {
+		m_score.player_two++;
+		restart();
+		std::cout << "Score [" << m_score.player_one << "] : [" << m_score.player_two << "]" << std::endl;
+	}
+	if (m_ball_slot->get_shape().getPosition().x > WINDOW_WIDTH) {
+		m_score.player_one++;
+		restart();
+		std::cout << "Score [" << m_score.player_one << "] : [" << m_score.player_two << "]" << std::endl;
+	}
+}
+
+void court::restart() {
+	for (objects::iterator it = m_objects.begin(); it != m_objects.end(); ++it) {
+		if (player *cur_player = dynamic_cast<player*>(*it)) {
+			cur_player->set_position(m_players_pos[cur_player->get_idx()]);
+			continue;
+		}
+		if (ball *cur_ball = dynamic_cast<ball*>(*it)) {
+			cur_ball->set_position(m_player_one->get_position());
+			cur_ball->is_sticked = true;
+			m_player_one->m_ball_slot = cur_ball;
+			continue;
 		}
 	}
 }

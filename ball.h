@@ -9,6 +9,8 @@ public:
 	virtual ~ball();
 
 	void set_position(const sf::Vector2f in_position);
+	const sf::CircleShape &get_shape() const { return m_shape; }
+
 	void set_direction(float in_dir) { m_cur_direction = in_dir; }
 
 	size_t get_player_idx() const { return m_player_idx; }

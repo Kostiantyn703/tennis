@@ -46,13 +46,13 @@ bool ball::intersect(object *in_obj) {
 	if (player *paddle = dynamic_cast<player*>(in_obj)) {
 		int idx = -1;
 		if (paddle->on_intersect(m_shape.getGlobalBounds(), idx)) {
-			if (idx < (PLAYER_SHAPE_COUNT / 2)) {
+			if (idx < (PADDLE_SHAPE_COUNT / 2)) {
 				if (m_shape.getPosition().x < WINDOW_WIDTH / 2) {
 					set_direction(315.f);
 				} else if (m_shape.getPosition().x > WINDOW_WIDTH / 2) {
 					set_direction(225.f);
 				}
-			} else if (idx >= (PLAYER_SHAPE_COUNT / 2)) {
+			} else if (idx >= (PADDLE_SHAPE_COUNT / 2)) {
 				if (m_shape.getPosition().x < WINDOW_WIDTH / 2) {
 					set_direction(45.f);
 				}

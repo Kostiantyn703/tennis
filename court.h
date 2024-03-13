@@ -28,6 +28,11 @@ private:
 	sf::RectangleShape m_shape;
 };
 
+struct score_board {
+	size_t player_one = 0;
+	size_t player_two = 0;
+};
+
 class court {
 public:
 	court();
@@ -42,4 +47,13 @@ public:
 
 private:
 	objects m_objects;
+
+	player *m_player_one = nullptr;
+	ball *m_ball_slot = nullptr;
+
+	score_board m_score;
+
+	std::vector<sf::Vector2f> m_players_pos;
+
+	void restart();
 };
