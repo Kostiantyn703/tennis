@@ -1,7 +1,4 @@
 #include "court.h"
-
-#include <iostream>
-
 #include "controller.h"
 #include "defs.h"
 
@@ -73,21 +70,15 @@ void court::update(float delta_time) {
 	if (m_ball_slot->get_shape().getPosition().x < 0.f) {
 		m_score.player_two++;
 		restart();
-		std::cout << "Score [" << m_score.player_one << "] : [" << m_score.player_two << "]" << std::endl;
 	}
 	if (m_ball_slot->get_shape().getPosition().x > WINDOW_WIDTH) {
 		m_score.player_one++;
 		restart();
-		std::cout << "Score [" << m_score.player_one << "] : [" << m_score.player_two << "]" << std::endl;
 	}
 }
 
 void court::restart() {
 	for (objects::iterator it = m_objects.begin(); it != m_objects.end(); ++it) {
-		if (player *cur_player = dynamic_cast<player*>(*it)) {
-			cur_player->set_position(m_players_pos[cur_player->get_idx()]);
-			continue;
-		}
 		if (ball *cur_ball = dynamic_cast<ball*>(*it)) {
 			cur_ball->set_position(m_player_one->get_position());
 			cur_ball->is_sticked = true;

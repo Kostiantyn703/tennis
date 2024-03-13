@@ -1,9 +1,7 @@
 #pragma once
 
 #include <vector>
-
 #include <SFML/Graphics.hpp>
-
 #include "interfaces.h"
 #include "player.h"
 #include "ball.h"
@@ -29,8 +27,8 @@ private:
 };
 
 struct score_board {
-	size_t player_one = 0;
-	size_t player_two = 0;
+	int player_one = 0;
+	int player_two = 0;
 };
 
 class court {
@@ -44,14 +42,14 @@ public:
 	void update(float delta_time);
 
 	const objects &get_objects() const { return m_objects; }
+	const score_board &get_score() const { return m_score; }
 
 private:
 	objects m_objects;
+	score_board m_score;
 
 	player *m_player_one = nullptr;
 	ball *m_ball_slot = nullptr;
-
-	score_board m_score;
 
 	std::vector<sf::Vector2f> m_players_pos;
 
