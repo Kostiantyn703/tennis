@@ -14,8 +14,6 @@ void border::draw(sf::RenderWindow &in_window) {
 	in_window.draw(m_shape);
 }
 
-void border::update(float delta_time) {}
-
 court::court() {
 	m_players_pos.push_back(sf::Vector2f(50.f, WINDOW_HEIGHT * 0.25f));
 	m_players_pos.push_back(sf::Vector2f(WINDOW_WIDTH - 60.f, WINDOW_HEIGHT * 0.25f));

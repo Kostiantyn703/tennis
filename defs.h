@@ -1,6 +1,7 @@
 #pragma once
 
 static const char *TITLE		= "TENNIS";
+static const char *FONT_PATH	= "../Prata-Regular.ttf";
 
 constexpr size_t WINDOW_HEIGHT	= 600;
 constexpr size_t WINDOW_WIDTH	= 800;

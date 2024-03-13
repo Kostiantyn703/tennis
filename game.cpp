@@ -31,5 +31,9 @@ void game::render() {
 	for (objects::iterator it = objs.begin(); it != objs.end(); ++it) {
 		(*it)->draw(m_window);
 	}
+	sf::RectangleShape net(sf::Vector2f(2.f, WINDOW_HEIGHT));
+	net.setPosition(sf::Vector2f(WINDOW_WIDTH / 2 - 1.f, 0.f));
+	m_window.draw(net);
+
 	m_window.display();
 }
