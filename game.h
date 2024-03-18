@@ -1,16 +1,28 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Network.hpp>
+
 #include <vector>
 #include "controller.h"
 #include "court.h"
+
+struct network_config {
+	std::string m_role;
+	unsigned short m_port = 51000;
+	std::string m_address = sf::IpAddress::getLocalAddress().toString();
+};
 
 class game {
 public:
 	game();
 	~game() {}
 
+	void init(const network_config &in_config);
+
 	void run();
+
+	sf::UdpSocket m_socket;
 
 private:
 	void render();

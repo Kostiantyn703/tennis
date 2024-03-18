@@ -18,6 +18,22 @@ game::game() {
 	m_court->init_player(*m_controller.get());
 }
 
+void game::init(const network_config &in_config) {
+	std::string server("server");
+	std::string client("client");
+	if (!in_config.m_role.compare(server)) {
+		std::cout << "I Am Server" << std::endl;
+		m_socket.bind(in_config.m_port);
+		std::cout << in_config.m_address << " " << in_config.m_port << std::endl;
+	}
+	if (!in_config.m_role.compare(client)) {
+		std::string message("Client is here");
+		std::cout << in_config.m_address << " " << in_config.m_port << std::endl;
+		m_socket.bind(51001);
+		m_socket.send(message.c_str(), message.size() + 1, in_config.m_address, in_config.m_port);
+	}
+}
+
 void game::run() {
 	float last_time = 0.f;
 	while (m_window.isOpen()) {
@@ -28,6 +44,15 @@ void game::run() {
 		m_controller->handle_input(m_window);
 		m_court->update(delta_time);
 		render();
+		// TODO: test
+		/*char buffer[1024];
+		size_t received;
+		sf::IpAddress addr;
+		unsigned short port = 51001;
+		if (m_socket.receive(buffer, sizeof(buffer), received, addr, port) == sf::Socket::Status::Done) {
+			std::string mess(buffer);
+			std::cout << mess << std::endl;
+		}*/
 	}
 }
 
