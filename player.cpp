@@ -34,9 +34,6 @@ void player::update(float in_delta_time) {
 	if (m_ball_slot) {
 		m_ball_slot->set_position(m_position);
 	}
-	if (m_player_slot) {
-		m_player_slot->move(offset);
-	}
 }
 
 bool player::intersect(object *in_obj) {

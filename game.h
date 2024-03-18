@@ -6,7 +6,6 @@
 #include "court.h"
 
 class game {
-
 public:
 	game();
 	~game() {}
