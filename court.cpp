@@ -47,13 +47,6 @@ void court::init_player(controller &out_controller) {
 	m_ball_slot = cur_ball;
 	cur_player->m_ball_slot = cur_ball;
 
-	// TODO: temporary debug, remove later
-	player *temp_player = new player(m_players_pos[1]);
-	temp_player->set_idx(1);
-	cur_player->m_player_slot = temp_player;
-	m_objects.push_back(temp_player);
-	// ~ end TODO
-
 	out_controller.set_owner(*cur_player);
 	m_objects.push_back(cur_player);
 }

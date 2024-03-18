@@ -37,8 +37,6 @@ public:
 	void move(sf::Vector2f &in_offset);
 
 	ball *m_ball_slot = nullptr;
-	// TODO: temp for test
-	player *m_player_slot = nullptr;
 private:
 	size_t m_idx;
 	visual m_visual;
