@@ -23,13 +23,13 @@ void game::init() {
 
 void game::run() {
 	float last_time = 0.f;
+	network *net = network::get_instance();
 	while (m_window.isOpen()) {
 		float cur_time = m_clock.getElapsedTime().asSeconds();
 		float delta_time = cur_time - last_time;
 		last_time = cur_time;
 
-		network::get_instance()->receive_data();
-
+		net->receive_data(*m_court);
 
 		m_controller->handle_input(m_window);
 		m_court->update(delta_time);
@@ -55,9 +55,9 @@ void game::render() {
 }
 
 void game::draw_score(int in_score, bool is_first_player) {
-	char buff[3];
-	itoa(in_score, buff, 10);
-	sf::Text text_score(buff, m_font);
+	char score_buff[8];
+	itoa(in_score, score_buff, 10);
+	sf::Text text_score(score_buff, m_font);
 	text_score.setCharacterSize(32);
 	text_score.setStyle(sf::Text::Regular);
 	if (is_first_player) {

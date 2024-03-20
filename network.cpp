@@ -5,6 +5,8 @@
 #include <fstream>
 #include <sstream>
 
+#include "court.h"
+
 static const char *NETWORK_CONFIG_FILENAME = "network.ini";
 const std::string SERVER_STR = "server";
 const std::string CLIENT_STR = "client";
@@ -18,22 +20,31 @@ network::network() {
 	configure();
 }
 
-void network::connect() {
-	std::string client_message("Client connected.");
-	m_socket.send(client_message.c_str(), client_message.size() + 1, m_config.m_address, m_config.m_port);
-}
-
 void network::send_data(sf::Packet &in_packet) {
-	m_socket.send(in_packet, m_config.m_address, m_config.m_port);
+	if (m_config.m_role == network_role::nr_server) {
+		m_socket.send(in_packet, m_config.m_address, m_config.m_client_port);
+		std::cout << "Score send\n";
+	}
 }
 
-void network::receive_data() {
-	char buffer[1024];
-	size_t received;
+void network::receive_data(court &in_court) {
+	if (m_config.m_role != network_role::nr_client) {
+		return;
+	}
+	sf::Packet packet;
 	sf::IpAddress addr;
-	if (m_socket.receive(buffer, sizeof(buffer), received, addr, m_config.m_port) == sf::Socket::Status::Done) {
-		std::string mess(buffer);
-		std::cout << mess << std::endl;
+	unsigned short port = 0;
+	if (m_socket.receive(packet, addr, port) == sf::Socket::Status::Done) {
+		score_board cur_score;
+		sf::Uint16 one;
+		sf::Uint16 two;
+		packet >> one >> two;
+
+		cur_score.player_one = one;
+		cur_score.player_two = two;
+
+		in_court.set_score(cur_score);
+		std::cout << "Received score\n";
 	}
 }
 
@@ -53,10 +64,10 @@ void network::configure() {
 	switch (m_config.m_role) {
 	case network_role::nr_server:
 		std::cout << "Server initialized" << std::endl;
-		m_socket.bind(m_config.m_port);
+		m_socket.bind(m_config.m_server_port);
 		break;
 	case network_role::nr_client:
-		connect();
+		m_socket.bind(m_config.m_client_port);
 		break;
 	default:
 		std::cout << "Network wasn't properly initialized.\n";
@@ -74,4 +85,3 @@ void network::set_role(const std::string &in_role) {
 		return;
 	}
 }
-

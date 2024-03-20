@@ -27,8 +27,8 @@ private:
 };
 
 struct score_board {
-	int player_one = 0;
-	int player_two = 0;
+	sf::Uint16 player_one = 0;
+	sf::Uint16 player_two = 0;
 };
 
 class court {
@@ -43,6 +43,8 @@ public:
 
 	const objects &get_objects() const { return m_objects; }
 	const score_board &get_score() const { return m_score; }
+
+	void set_score(score_board &in_score) { m_score = in_score; }
 
 private:
 	objects m_objects;
