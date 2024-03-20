@@ -71,6 +71,7 @@ void court::update(float delta_time) {
 }
 
 void court::restart() {
+	
 	for (objects::iterator it = m_objects.begin(); it != m_objects.end(); ++it) {
 		if (ball *cur_ball = dynamic_cast<ball*>(*it)) {
 			cur_ball->set_position(m_player_one->get_position());

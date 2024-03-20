@@ -2,7 +2,6 @@
 
 static const char *TITLE		= "TENNIS";
 static const char *FONT_PATH	= "score_font.ttf";
-static const char *NETWORK_CONFIG_FILENAME = "network.ini";
 
 constexpr size_t WINDOW_HEIGHT	= 600;
 constexpr size_t WINDOW_WIDTH	= 800;
@@ -27,3 +26,5 @@ static float caculate_sine(float in_angle) {
 static float calculate_cosine(float in_angle) {
 	return std::cos(in_angle * (PI / PLANE_ANGLE));
 }
+
+#include "network.h"
