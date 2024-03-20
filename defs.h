@@ -1,7 +1,7 @@
 #pragma once
 
 static const char *TITLE		= "TENNIS";
-static const char *FONT_PATH	= "../content/score_font.ttf";
+static const char *FONT_PATH	= "score_font.ttf";
 static const char *NETWORK_CONFIG_FILENAME = "network.ini";
 
 constexpr size_t WINDOW_HEIGHT	= 600;

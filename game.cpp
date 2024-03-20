@@ -3,6 +3,67 @@
 #include "defs.h"
 #include <iostream>
 #include <stdlib.h>
+#include <filesystem>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+
+const std::string SERVER_STR = "server";
+const std::string CLIENT_STR = "client";
+
+
+void network::send_data() {
+	std::string client_message("Client connected.");
+	m_socket.send(client_message.c_str(), client_message.size() + 1, m_config.m_address, m_config.m_port);
+}
+
+void network::receive_data() {
+	char buffer[1024];
+	size_t received;
+	sf::IpAddress addr;
+	if (m_socket.receive(buffer, sizeof(buffer), received, addr, m_config.m_port) == sf::Socket::Status::Done) {
+		std::string mess(buffer);
+		std::cout << mess << std::endl;
+	}
+}
+
+void network::parse_role(std::string &out_result) {
+	std::ifstream read_stream(NETWORK_CONFIG_FILENAME);
+	if (!read_stream.is_open()) {
+		std::cout << "Failed to load network config.\n";
+		return;
+	}
+
+	std::stringstream str_stream;
+	str_stream << read_stream.rdbuf();
+	out_result = str_stream.str();
+}
+
+void network::configure() {
+	switch (m_config.m_role) {
+		case network_role::nr_server:
+			std::cout << "Server initialized" << std::endl;
+			m_socket.bind(m_config.m_port);
+		break;
+		case network_role::nr_client:
+			send_data();
+		break;
+		default:
+		std::cout << "Network wasn't properly initialized.\n";
+	}
+	m_socket.setBlocking(false);
+}
+
+void network::set_role(const std::string &in_role) {
+	if (!in_role.compare(SERVER_STR)) {
+		m_config.m_role = network_role::nr_server;
+		return;
+	}
+	if (!in_role.compare(CLIENT_STR)) {
+		m_config.m_role = network_role::nr_client;
+		return;
+	}
+}
 
 game::game() {
 	m_window.create(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), TITLE);
@@ -18,22 +79,13 @@ game::game() {
 	m_court->init_player(*m_controller.get());
 }
 
-void game::init(const network_config &in_config) {
-	std::string server("server");
-	std::string client("client");
-	if (!in_config.m_role.compare(server)) {
-		std::cout << "I Am Server" << std::endl;
-		m_socket.bind(in_config.m_port);
-		m_socket.setBlocking(false);
-		std::cout << in_config.m_address << " " << in_config.m_port << std::endl;
-	}
-	if (!in_config.m_role.compare(client)) {
-		std::string message("Client is here");
-		std::cout << in_config.m_address << " " << in_config.m_port << std::endl;
-		m_socket.bind(51001);
-		m_socket.setBlocking(false);
-		m_socket.send(message.c_str(), message.size() + 1, in_config.m_address, in_config.m_port);
-	}
+void game::init() {
+	m_network = std::make_unique<network>();
+
+	std::string role_str;
+	m_network->parse_role(role_str);
+	m_network->set_role(role_str);
+	m_network->configure();
 }
 
 void game::run() {
@@ -43,18 +95,11 @@ void game::run() {
 		float delta_time = cur_time - last_time;
 		last_time = cur_time;
 
+		m_network->receive_data();
+
 		m_controller->handle_input(m_window);
 		m_court->update(delta_time);
 		render();
-		// TODO: test
-		char buffer[1024];
-		size_t received;
-		sf::IpAddress addr;
-		unsigned short port = 51001;
-		if (m_socket.receive(buffer, sizeof(buffer), received, addr, port) == sf::Socket::Status::Done) {
-			std::string mess(buffer);
-			std::cout << mess << std::endl;
-		}
 	}
 }
 
