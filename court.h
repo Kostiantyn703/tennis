@@ -46,6 +46,8 @@ public:
 
 	void set_score(score_board &in_score) { m_score = in_score; }
 
+	//void on_score_change();
+
 private:
 	objects m_objects;
 	score_board m_score;

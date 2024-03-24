@@ -71,12 +71,12 @@ void court::update(float delta_time) {
 }
 
 void court::restart() {
-	sf::Packet packet;
+	/*sf::Packet packet;
 	sf::Uint16 one = m_score.player_one;
 	sf::Uint16 two = m_score.player_two;
 	packet << one << two;
 	network::get_instance()->send_data(packet);
-
+*/
 	for (objects::iterator it = m_objects.begin(); it != m_objects.end(); ++it) {
 		if (ball *cur_ball = dynamic_cast<ball*>(*it)) {
 			cur_ball->set_position(m_player_one->get_position());

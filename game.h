@@ -7,6 +7,7 @@
 
 #include "controller.h"
 #include "court.h"
+#include "network.h"
 
 class game {
 public:
@@ -27,4 +28,6 @@ private:
 
 	std::unique_ptr<controller> m_controller;
 	std::unique_ptr<court> m_court;
+	
+	network m_network;
 };

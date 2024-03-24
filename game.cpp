@@ -23,13 +23,13 @@ void game::init() {
 
 void game::run() {
 	float last_time = 0.f;
-	network *net = network::get_instance();
 	while (m_window.isOpen()) {
 		float cur_time = m_clock.getElapsedTime().asSeconds();
 		float delta_time = cur_time - last_time;
 		last_time = cur_time;
 
-		net->receive_data(*m_court);
+		
+		//net->receive_data(*m_court);
 
 		m_controller->handle_input(m_window);
 		m_court->update(delta_time);

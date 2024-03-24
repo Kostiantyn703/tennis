@@ -26,5 +26,3 @@ static float caculate_sine(float in_angle) {
 static float calculate_cosine(float in_angle) {
 	return std::cos(in_angle * (PI / PLANE_ANGLE));
 }
-
-#include "network.h"
