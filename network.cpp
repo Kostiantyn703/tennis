@@ -16,9 +16,14 @@ network::network() {
 	configure();
 }
 
-void network::send_data(sf::Packet &in_packet) {
+void network::send_data(sf::Packet &in_packet, const std::string in_data_token) {
 	if (m_config.m_role == network_role::nr_server) {
-		m_config.m_socket.send(in_packet, m_config.m_address, CLIENT_PORT);
+		if (!in_data_token.compare(SCORE_TOKEN)) {
+			m_config.m_score_socket.send(in_packet, m_config.m_address, CLIENT_SCORE_PORT);
+		}
+		if (!in_data_token.compare(OBJECTS_TOKEN)) {
+			m_config.m_objects_socket.send(in_packet, m_config.m_address, CLIENT_OBJECTS_PORT);
+		}
 	}
 }
 
@@ -29,7 +34,7 @@ void network::receive_data(court &in_court) {
 	sf::Packet packet;
 	sf::IpAddress addr;
 	unsigned short port = 0;
-	if (m_config.m_socket.receive(packet, addr, port) == sf::Socket::Status::Done) {
+	if (m_config.m_score_socket.receive(packet, addr, port) == sf::Socket::Status::Done) {
 		score_board cur_score;
 		sf::Uint16 one;
 		sf::Uint16 two;
@@ -39,6 +44,20 @@ void network::receive_data(court &in_court) {
 		cur_score.player_two = two;
 
 		in_court.set_score(cur_score);
+	}
+
+	if (m_config.m_objects_socket.receive(packet, addr, port) == sf::Socket::Status::Done) {
+		objects objs = in_court.get_objects();
+		for (size_t i = 0; i < objs.size(); ++i) {
+			if (ball *cur_ball = dynamic_cast<ball*>(objs[i])) {
+				float coord_x = 0.f;
+				float coord_y = 0.f;
+
+				packet >> coord_x >> coord_y;
+
+				cur_ball->set_position(sf::Vector2f(coord_x, coord_y), false);
+			}
+		}
 	}
 }
 
@@ -65,7 +84,8 @@ void network::configure() {
 	default:
 		std::cout << "Network wasn't properly initialized.\n";
 	}
-	m_config.m_socket.setBlocking(false);
+	m_config.m_score_socket.setBlocking(false);
+	m_config.m_objects_socket.setBlocking(false);
 }
 
 void network::set_role(const std::string &in_role) {
@@ -80,9 +100,11 @@ void network::set_role(const std::string &in_role) {
 }
 
 void network::init_server() {
-	m_config.m_socket.bind(SERVER_PORT);
+	m_config.m_score_socket.bind(SERVER_SCORE_PORT);
+	m_config.m_objects_socket.bind(SERVER_OBJECTS_PORT);
 }
 
 void network::init_client() {
-	m_config.m_socket.bind(CLIENT_PORT);
+	m_config.m_score_socket.bind(CLIENT_SCORE_PORT);
+	m_config.m_objects_socket.bind(CLIENT_OBJECTS_PORT);
 }

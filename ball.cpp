@@ -13,12 +13,14 @@ ball::ball() {
 
 ball::~ball() {}
 
-void ball::set_position(const sf::Vector2f in_position) {
+void ball::set_position(const sf::Vector2f in_position, bool offset) {
 	sf::Vector2f new_pos = in_position;
 	// TODO: also depending on player idx set initial direction
-	m_player_idx == 0 ? (new_pos.x += PADDLE_OFFSET_X) : (new_pos.x -= PADDLE_OFFSET_X);
-	new_pos.y += PADDLE_OFFSET_Y;
-
+	if (offset) {
+		m_player_idx == 0 ? (new_pos.x += PADDLE_OFFSET_X) : (new_pos.x -= PADDLE_OFFSET_X);
+		new_pos.y += PADDLE_OFFSET_Y;
+	}
+	
 	m_shape.setPosition(new_pos);
 }
 

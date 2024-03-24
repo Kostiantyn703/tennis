@@ -28,10 +28,14 @@ void game::run() {
 		float delta_time = cur_time - last_time;
 		last_time = cur_time;
 
-		m_network.receive_data(*m_court);
+		if (m_network.get_role() != network_role::nr_server) {
+			m_network.receive_data(*m_court);
+		}
 
 		m_controller->handle_input(m_window);
-		m_court->update(*this, delta_time);
+		if (m_network.get_role() == network_role::nr_server) {
+			m_court->update(*this, delta_time);
+		}
 		render();
 	}
 }
@@ -72,7 +76,7 @@ void game::on_score_change() {
 	score_board cur_score = m_court->get_score();
 	packet << cur_score.player_one << cur_score.player_two;
 
-	m_network.send_data(packet);
+	m_network.send_data(packet, SCORE_TOKEN);
 
 	m_court->restart();
 }

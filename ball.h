@@ -8,7 +8,7 @@ public:
 	ball();
 	virtual ~ball();
 
-	void set_position(const sf::Vector2f in_position);
+	void set_position(const sf::Vector2f in_position, bool offset = true);
 	const sf::CircleShape &get_shape() const { return m_shape; }
 
 	void set_direction(float in_dir) { m_cur_direction = in_dir; }

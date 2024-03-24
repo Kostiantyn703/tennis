@@ -8,8 +8,13 @@
 static const std::string SERVER_STR = "server";
 static const std::string CLIENT_STR = "client";
 
-constexpr unsigned short SERVER_PORT = 51000;
-constexpr unsigned short CLIENT_PORT = 51001;
+static const std::string OBJECTS_TOKEN = "objects";
+static const std::string SCORE_TOKEN = "score";
+
+constexpr unsigned short SERVER_SCORE_PORT = 51000;
+constexpr unsigned short SERVER_OBJECTS_PORT = 51001;
+constexpr unsigned short CLIENT_SCORE_PORT = 51002;
+constexpr unsigned short CLIENT_OBJECTS_PORT = 51003;
 
 class court;
 
@@ -24,7 +29,8 @@ struct network_config {
 
 	sf::IpAddress m_address = sf::IpAddress::getLocalAddress();
 
-	sf::UdpSocket m_socket;
+	sf::UdpSocket m_score_socket;
+	sf::UdpSocket m_objects_socket;
 };
 
 class network {
@@ -32,11 +38,13 @@ public:
 	network();
 	~network() {}
 
-	void send_data(sf::Packet &in_packet);
+	void send_data(sf::Packet &in_packet, const std::string in_data_token);
 	void receive_data(court &in_court);
 
 	void configure();
-	
+
+	network_role get_role() const { return m_config.m_role; }
+
 private:
 	network_config m_config;
 

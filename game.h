@@ -20,6 +20,7 @@ public:
 
 	void on_score_change();
 
+	network m_network;
 private:
 	void render();
 	void draw_score(int in_score, bool is_first_player);
@@ -30,6 +31,5 @@ private:
 
 	std::unique_ptr<controller> m_controller;
 	std::unique_ptr<court> m_court;
-	
-	network m_network;
+
 };
