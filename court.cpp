@@ -1,6 +1,7 @@
 #include "court.h"
 #include "controller.h"
 #include "defs.h"
+#include "game.h"
 
 border::border(const sf::Vector2f & in_pos, const sf::Vector2f &in_size) {
 	m_shape.setPosition(in_pos);
@@ -51,7 +52,7 @@ void court::init_player(controller &out_controller) {
 	m_objects.push_back(cur_player);
 }
 
-void court::update(float delta_time) {
+void court::update(game &in_game, float delta_time) {
 	for (objects::iterator it = m_objects.begin(); it != m_objects.end(); ++it) {
 		(*it)->update(delta_time);
 		for (objects::iterator local_it = m_objects.begin(); local_it != m_objects.end(); ++local_it) {
@@ -62,21 +63,15 @@ void court::update(float delta_time) {
 	}
 	if (m_ball_slot->get_shape().getPosition().x < 0.f) {
 		m_score.player_two++;
-		restart();
+		in_game.on_score_change();
 	}
 	if (m_ball_slot->get_shape().getPosition().x > WINDOW_WIDTH) {
 		m_score.player_one++;
-		restart();
+		in_game.on_score_change();
 	}
 }
 
 void court::restart() {
-	/*sf::Packet packet;
-	sf::Uint16 one = m_score.player_one;
-	sf::Uint16 two = m_score.player_two;
-	packet << one << two;
-	network::get_instance()->send_data(packet);
-*/
 	for (objects::iterator it = m_objects.begin(); it != m_objects.end(); ++it) {
 		if (ball *cur_ball = dynamic_cast<ball*>(*it)) {
 			cur_ball->set_position(m_player_one->get_position());

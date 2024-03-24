@@ -8,8 +8,6 @@
 #include "court.h"
 
 static const char *NETWORK_CONFIG_FILENAME = "network.ini";
-static const std::string SERVER_STR = "server";
-static const std::string CLIENT_STR = "client";
 
 network::network() {
 	std::string role_str;
@@ -18,21 +16,20 @@ network::network() {
 	configure();
 }
 
-void network::send_data(sf::Packet &in_packet, std::string &in_data_token) {
+void network::send_data(sf::Packet &in_packet) {
 	if (m_config.m_role == network_role::nr_server) {
-		//m_socket.send(in_packet, m_config.m_address, m_config.m_client_port);
-		std::cout << "Score send\n";
+		m_config.m_socket.send(in_packet, m_config.m_address, CLIENT_PORT);
 	}
 }
 
-void network::receive_data(std::string &in_data_token) {
-	/*if (m_config.m_role != network_role::nr_client) {
+void network::receive_data(court &in_court) {
+	if (m_config.m_role != network_role::nr_client) {
 		return;
 	}
 	sf::Packet packet;
 	sf::IpAddress addr;
 	unsigned short port = 0;
-	if (m_socket.receive(packet, addr, port) == sf::Socket::Status::Done) {
+	if (m_config.m_socket.receive(packet, addr, port) == sf::Socket::Status::Done) {
 		score_board cur_score;
 		sf::Uint16 one;
 		sf::Uint16 two;
@@ -42,8 +39,7 @@ void network::receive_data(std::string &in_data_token) {
 		cur_score.player_two = two;
 
 		in_court.set_score(cur_score);
-		std::cout << "Received score\n";
-	}*/
+	}
 }
 
 void network::parse_role(std::string &out_result) {
@@ -69,10 +65,7 @@ void network::configure() {
 	default:
 		std::cout << "Network wasn't properly initialized.\n";
 	}
-
-	for (std::vector<socket>::iterator it = m_config.m_sockets.begin(); it != m_config.m_sockets.end(); ++it) {
-		it->bind();
-	}
+	m_config.m_socket.setBlocking(false);
 }
 
 void network::set_role(const std::string &in_role) {
@@ -87,10 +80,9 @@ void network::set_role(const std::string &in_role) {
 }
 
 void network::init_server() {
-	m_config.m_sockets.push_back(socket(OBJECTS_PORT, OBJECTS_TOKEN));
-	m_config.m_sockets.push_back(socket(SCORE_PORT, SCORE_TOKEN));
+	m_config.m_socket.bind(SERVER_PORT);
 }
 
 void network::init_client() {
-	m_config.m_sockets.push_back(socket(CLIENT_PORT, CLIENT_TOKEN));
+	m_config.m_socket.bind(CLIENT_PORT);
 }

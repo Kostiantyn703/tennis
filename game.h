@@ -18,6 +18,8 @@ public:
 
 	void run();
 
+	void on_score_change();
+
 private:
 	void render();
 	void draw_score(int in_score, bool is_first_player);

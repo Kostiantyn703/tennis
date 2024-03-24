@@ -28,11 +28,10 @@ void game::run() {
 		float delta_time = cur_time - last_time;
 		last_time = cur_time;
 
-		
-		//net->receive_data(*m_court);
+		m_network.receive_data(*m_court);
 
 		m_controller->handle_input(m_window);
-		m_court->update(delta_time);
+		m_court->update(*this, delta_time);
 		render();
 	}
 }
@@ -66,4 +65,14 @@ void game::draw_score(int in_score, bool is_first_player) {
 		text_score.setPosition(sf::Vector2f(WINDOW_WIDTH * 0.75f - 16.f, 20.f));
 	}
 	m_window.draw(text_score);
+}
+
+void game::on_score_change() {
+	sf::Packet packet;
+	score_board cur_score = m_court->get_score();
+	packet << cur_score.player_one << cur_score.player_two;
+
+	m_network.send_data(packet);
+
+	m_court->restart();
 }

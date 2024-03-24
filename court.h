@@ -8,6 +8,7 @@
 
 using objects = std::vector<object*>;
 
+class game;
 class controller;
 
 class border : public object {
@@ -39,14 +40,14 @@ public:
 	void init();
 	void init_player(controller &out_controller);
 
-	void update(float delta_time);
+	void update(game &in_game, float delta_time);
 
 	const objects &get_objects() const { return m_objects; }
 	const score_board &get_score() const { return m_score; }
 
 	void set_score(score_board &in_score) { m_score = in_score; }
 
-	//void on_score_change();
+	void restart();
 
 private:
 	objects m_objects;
@@ -56,6 +57,4 @@ private:
 	ball *m_ball_slot = nullptr;
 
 	std::vector<sf::Vector2f> m_players_pos;
-
-	void restart();
 };
