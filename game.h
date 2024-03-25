@@ -18,19 +18,13 @@ public:
 
 	void run();
 
-	void on_score_change();
-
 private:
 	std::unique_ptr<network> m_network;
 
 	std::unique_ptr<game_instance> m_game_impl;
 	std::unique_ptr<controller> m_controller;
 
-	void draw_score(int in_score, bool is_first_player);
-
 	sf::RenderWindow m_window;
-
-	sf::Font m_font;
 
 };
 
@@ -41,12 +35,17 @@ public:
 	virtual void update() = 0;
 
 	void init(controller &in_controller);
+	void on_score_change();
 
 	void render(sf::RenderWindow &in_window);
 
 protected:
-
 	std::unique_ptr<court> m_court;
+
+private:
+	void draw_score(sf::Text &out_score, int in_score, bool is_first_player);
+
+	sf::Font m_font;
 };
 
 
@@ -58,6 +57,7 @@ public:
 	virtual void update() override;
 
 private:
+
 	float last_time = 0.f;
 	sf::Clock m_clock;
 };

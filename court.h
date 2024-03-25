@@ -8,7 +8,7 @@
 
 using objects = std::vector<object*>;
 
-class game;
+class game_instance;
 class controller;
 
 class border : public object {
@@ -40,8 +40,7 @@ public:
 	void init();
 	void init_player(controller &out_controller);
 
-	//void update(game &in_game, float delta_time);
-	void update(float delta_time);
+	void update(game_instance &in_game, float delta_time);
 
 	const objects &get_objects() const { return m_objects; }
 	const score_board &get_score() const { return m_score; }
