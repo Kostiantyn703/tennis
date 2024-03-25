@@ -52,16 +52,17 @@ void court::init_player(controller &out_controller) {
 	m_objects.push_back(cur_player);
 }
 
-void court::update(game &in_game, float delta_time) {
+//void court::update(game &in_game, float delta_time) {
+void court::update(float delta_time) {
 	for (objects::iterator it = m_objects.begin(); it != m_objects.end(); ++it) {
 		(*it)->update(delta_time);
-		if (ball *bal = dynamic_cast<ball*>(*it)) {
-			//if (in_game.m_network.get_role() == network_role::nr_server) {
-			sf::Packet pack;
-			pack << bal->get_shape().getPosition().x << bal->get_shape().getPosition().y;
-			in_game.m_network.send_data(pack, OBJECTS_TOKEN);
-			//}
-		}
+		//if (ball *bal = dynamic_cast<ball*>(*it)) {
+		//	//if (in_game.m_network.get_role() == network_role::nr_server) {
+		//	sf::Packet pack;
+		//	pack << bal->get_shape().getPosition().x << bal->get_shape().getPosition().y;
+		//	in_game.m_network.send_data(pack, OBJECTS_TOKEN);
+		//	//}
+		//}
 
 		for (objects::iterator local_it = m_objects.begin(); local_it != m_objects.end(); ++local_it) {
 			if ((*it)->intersect(*local_it)) {
@@ -71,11 +72,11 @@ void court::update(game &in_game, float delta_time) {
 	}
 	if (m_ball_slot->get_shape().getPosition().x < 0.f) {
 		m_score.player_two++;
-		in_game.on_score_change();
+		//in_game.on_score_change();
 	}
 	if (m_ball_slot->get_shape().getPosition().x > WINDOW_WIDTH) {
 		m_score.player_one++;
-		in_game.on_score_change();
+		//in_game.on_score_change();
 	}
 }
 

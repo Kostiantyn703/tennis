@@ -46,12 +46,12 @@ public:
 	void send_data(sf::Packet &in_packet, const std::string in_data_token);
 	void receive_data(court &in_court);
 
-	void configure();
-
 	network_role get_role() const { return m_config.m_role; }
 
 private:
 	network_config m_config;
+
+	void configure();
 
 	void parse_role(std::string &out_result);
 	void set_role(const std::string &in_role);

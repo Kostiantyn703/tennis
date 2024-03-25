@@ -21,4 +21,6 @@ public:
 	virtual void update(float delta_time) = 0;
 
 	virtual bool intersect(object *in_obj) = 0;
+
+	size_t m_global_idx;
 };
