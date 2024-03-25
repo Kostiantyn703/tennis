@@ -85,7 +85,7 @@ void network::configure() {
 		std::cout << "Network wasn't properly initialized.\n";
 	}
 	m_config.m_score_socket.setBlocking(false);
-	m_config.m_objects_socket.setBlocking(false);
+	//m_config.m_objects_socket.setBlocking(false);
 }
 
 void network::set_role(const std::string &in_role) {
@@ -102,9 +102,18 @@ void network::set_role(const std::string &in_role) {
 void network::init_server() {
 	m_config.m_score_socket.bind(SERVER_SCORE_PORT);
 	m_config.m_objects_socket.bind(SERVER_OBJECTS_PORT);
+
+	m_config.m_connect_listener.listen(CONNECTION_PORT);
+	if (m_config.m_connect_listener.accept(m_config.m_connect_socket) == sf::Socket::Done) {
+		std::cout << "Client connected\n";
+	}
 }
 
 void network::init_client() {
 	m_config.m_score_socket.bind(CLIENT_SCORE_PORT);
 	m_config.m_objects_socket.bind(CLIENT_OBJECTS_PORT);
+
+	if (m_config.m_connect_socket.connect(m_config.m_address, CONNECTION_PORT) == sf::Socket::Done) {
+		std::cout << "Connected to server.\n";
+	}
 }

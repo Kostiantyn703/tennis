@@ -11,10 +11,11 @@ static const std::string CLIENT_STR = "client";
 static const std::string OBJECTS_TOKEN = "objects";
 static const std::string SCORE_TOKEN = "score";
 
-constexpr unsigned short SERVER_SCORE_PORT = 51000;
-constexpr unsigned short SERVER_OBJECTS_PORT = 51001;
-constexpr unsigned short CLIENT_SCORE_PORT = 51002;
-constexpr unsigned short CLIENT_OBJECTS_PORT = 51003;
+constexpr unsigned short CONNECTION_PORT = 50000;
+constexpr unsigned short SERVER_SCORE_PORT = 51001;
+constexpr unsigned short SERVER_OBJECTS_PORT = 51002;
+constexpr unsigned short CLIENT_SCORE_PORT = 51003;
+constexpr unsigned short CLIENT_OBJECTS_PORT = 51004;
 
 class court;
 
@@ -31,6 +32,10 @@ struct network_config {
 
 	sf::UdpSocket m_score_socket;
 	sf::UdpSocket m_objects_socket;
+
+	// for connection
+	sf::TcpListener m_connect_listener;
+	sf::TcpSocket m_connect_socket;
 };
 
 class network {
