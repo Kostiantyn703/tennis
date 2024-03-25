@@ -31,6 +31,7 @@ void player::draw(sf::RenderWindow &in_window) {
 void player::update(float in_delta_time) {
 	sf::Vector2f offset(0.f, m_cur_speed * in_delta_time);
 	move(offset);
+	set_position(m_position);
 	if (m_ball_slot) {
 		m_ball_slot->set_position(m_position);
 	}

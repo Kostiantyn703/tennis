@@ -18,6 +18,7 @@ public:
 
 	virtual void draw(sf::RenderWindow &in_window) override;
 	virtual void update(float delta_time) override {}
+	virtual void on_set_position() override {}
 
 	virtual bool intersect(object *in_obj) override { return false; }
 

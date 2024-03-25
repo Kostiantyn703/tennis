@@ -21,6 +21,11 @@ public:
 	virtual void update(float delta_time) = 0;
 
 	virtual bool intersect(object *in_obj) = 0;
+	virtual void on_set_position() = 0;
 
-	size_t m_global_idx;
+
+	unsigned int m_global_idx;
+
+	sf::Vector2f m_position;
+
 };

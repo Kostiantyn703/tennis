@@ -14,14 +14,16 @@ game::game() {
 		m_game_impl->init(*m_controller.get());
 	}
 	if (m_network->get_role() == network_role::nr_client) {
-		// TODO: implement client init
+		m_game_impl = std::make_unique<client>();
+		m_controller = std::make_unique<controller>();
+		m_game_impl->init(*m_controller.get());
 	}
 }
 
 void game::run() {
 	while (m_window.isOpen()) {
 		m_controller->handle_input(m_window);
-		m_game_impl->update();
+		m_game_impl->update(*m_network.get());
 		m_game_impl->render(m_window);
 	}
 }
@@ -83,16 +85,22 @@ void game_instance::draw_score(sf::Text &out_score, int in_score, bool is_first_
 	}
 }
 
-void server::update() {
+void server::update(network &in_network) {
 	float cur_time = m_clock.getElapsedTime().asSeconds();
 	float delta_time = cur_time - last_time;
 	last_time = cur_time;
 	m_court->update(*this, delta_time);
+
+	sf::Packet obj_pack;
+	for (objects::const_iterator it = m_court->get_objects().begin(); it != m_court->get_objects().end(); ++it) {
+		if ((*it)->m_global_idx == std::numeric_limits<unsigned int>::max()) continue;
+		obj_pack << (*it)->m_global_idx << (*it)->m_position.x << (*it)->m_position.y;
+		in_network.send_data(obj_pack, OBJECTS_TOKEN);
+		//obj_pack.clear();
+	}
 }
 
-void client::update() {
-	/*if (m_network.get_role() != network_role::nr_server) {
-		m_network.receive_data(*m_court);
-	}*/
+void client::update(network &in_network) {
 
+	in_network.receive_data(*m_court);
 }

@@ -8,6 +8,10 @@ public:
 	ball();
 	virtual ~ball();
 
+	virtual void on_set_position() override{
+		set_position(m_position, false);
+	}
+
 	void set_position(const sf::Vector2f in_position, bool offset = true);
 	const sf::CircleShape &get_shape() const { return m_shape; }
 

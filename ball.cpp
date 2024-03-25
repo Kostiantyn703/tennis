@@ -22,6 +22,7 @@ void ball::set_position(const sf::Vector2f in_position, bool offset) {
 	}
 	
 	m_shape.setPosition(new_pos);
+	m_position = new_pos;
 }
 
 void ball::update(float delta_time) {
@@ -31,6 +32,7 @@ void ball::update(float delta_time) {
 		sf::Vector2f offset(delta_x, delta_y);
 		m_shape.move(offset);
 	}
+	m_position = m_shape.getPosition();
 }
 
 void ball::draw(sf::RenderWindow &in_window) {

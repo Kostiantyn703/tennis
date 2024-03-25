@@ -32,7 +32,7 @@ class game_instance {
 public: 
 	virtual ~game_instance() {}
 
-	virtual void update() = 0;
+	virtual void update(network &in_network) = 0;
 
 	void init(controller &in_controller);
 	void on_score_change();
@@ -54,7 +54,7 @@ public:
 	server() {}
 	virtual ~server() {}
 
-	virtual void update() override;
+	virtual void update(network &in_network) override;
 
 private:
 
@@ -67,5 +67,5 @@ public:
 	client() {}
 	virtual ~client() {}
 
-	virtual void update() override;
+	virtual void update(network &in_network) override;
 };

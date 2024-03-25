@@ -1,11 +1,17 @@
 #include "court.h"
+
+#include <limits>
+
 #include "controller.h"
 #include "defs.h"
 #include "game.h"
 
+
 border::border(const sf::Vector2f & in_pos, const sf::Vector2f &in_size) {
 	m_shape.setPosition(in_pos);
 	m_shape.setSize(in_size);
+
+	m_global_idx = std::numeric_limits<unsigned int>::max();
 }
 
 void border::draw(sf::RenderWindow &in_window) {
@@ -43,32 +49,29 @@ void court::init_player(controller &out_controller) {
 	sf::Vector2f ball_pos(WINDOW_WIDTH * 0.5f, WINDOW_HEIGHT * 0.5f);
 	ball *cur_ball = new ball;
 	cur_ball->set_position(ball_pos);
+	cur_ball->m_global_idx = (unsigned int)m_objects.size();
 	m_objects.push_back(cur_ball);
 
 	m_ball_slot = cur_ball;
 	cur_player->m_ball_slot = cur_ball;
 
 	out_controller.set_owner(*cur_player);
+
+	cur_player->m_global_idx = (unsigned int)m_objects.size();
 	m_objects.push_back(cur_player);
+
 }
 
 void court::update(game_instance &in_game, float delta_time) {
 	for (objects::iterator it = m_objects.begin(); it != m_objects.end(); ++it) {
 		(*it)->update(delta_time);
-		//if (ball *bal = dynamic_cast<ball*>(*it)) {
-		//	//if (in_game.m_network.get_role() == network_role::nr_server) {
-		//	sf::Packet pack;
-		//	pack << bal->get_shape().getPosition().x << bal->get_shape().getPosition().y;
-		//	in_game.m_network.send_data(pack, OBJECTS_TOKEN);
-		//	//}
-		//}
-
 		for (objects::iterator local_it = m_objects.begin(); local_it != m_objects.end(); ++local_it) {
 			if ((*it)->intersect(*local_it)) {
 				break;
 			}
 		}
 	}
+
 	if (m_ball_slot->get_shape().getPosition().x < 0.f) {
 		m_score.player_two++;
 		in_game.on_score_change();

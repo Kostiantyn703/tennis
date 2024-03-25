@@ -34,12 +34,15 @@ public:
 	const sf::Vector2f &get_position() const { return m_position; }
 	void set_position(const sf::Vector2f &in_pos);
 
+	virtual void on_set_position() override {
+		set_position(m_position);
+	}
+
 	void move(sf::Vector2f &in_offset);
 
 	ball *m_ball_slot = nullptr;
 private:
 	size_t m_idx;
 	visual m_visual;
-	sf::Vector2f m_position;
 	float m_cur_speed = 0.f;
 };
