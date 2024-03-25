@@ -83,7 +83,7 @@ void network::configure() {
 		std::cout << "Network wasn't properly initialized.\n";
 	}
 	m_config.m_score_socket.setBlocking(false);
-	//m_config.m_objects_socket.setBlocking(false);
+	m_config.m_objects_socket.setBlocking(false);
 }
 
 void network::set_role(const std::string &in_role) {

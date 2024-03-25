@@ -90,13 +90,15 @@ void server::update(network &in_network) {
 	float delta_time = cur_time - last_time;
 	last_time = cur_time;
 	m_court->update(*this, delta_time);
-
-	sf::Packet obj_pack;
-	for (objects::const_iterator it = m_court->get_objects().begin(); it != m_court->get_objects().end(); ++it) {
-		if ((*it)->m_global_idx == std::numeric_limits<unsigned int>::max()) continue;
-		obj_pack << (*it)->m_global_idx << (*it)->m_position.x << (*it)->m_position.y;
-		in_network.send_data(obj_pack, OBJECTS_TOKEN);
-		//obj_pack.clear();
+	m_time_to_send -= delta_time;
+	if (m_time_to_send < 0.f) {
+		sf::Packet obj_pack;
+		for (objects::const_iterator it = m_court->get_objects().begin(); it != m_court->get_objects().end(); ++it) {
+			if ((*it)->m_global_idx == std::numeric_limits<unsigned int>::max()) continue;
+			obj_pack << (*it)->m_global_idx << (*it)->m_position.x << (*it)->m_position.y;
+			in_network.send_data(obj_pack, OBJECTS_TOKEN);
+		}
+		m_time_to_send = m_max_time;
 	}
 }
 

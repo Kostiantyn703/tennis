@@ -57,6 +57,8 @@ public:
 	virtual void update(network &in_network) override;
 
 private:
+	float m_time_to_send = 0.f;
+	float m_send_delay = 0.0045f;
 
 	float last_time = 0.f;
 	sf::Clock m_clock;
