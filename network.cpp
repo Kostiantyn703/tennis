@@ -77,6 +77,7 @@ void network::configure() {
 	switch (m_config.m_role) {
 	case network_role::nr_server:
 		init_server();
+		m_config.m_objects_socket.setBlocking(false);
 		break;
 	case network_role::nr_client:
 		init_client();
@@ -85,7 +86,7 @@ void network::configure() {
 		std::cout << "Network wasn't properly initialized.\n";
 	}
 	m_config.m_score_socket.setBlocking(false);
-	m_config.m_objects_socket.setBlocking(false);
+
 	//m_config.m_client_input_socket.setBlocking(false);
 }
 

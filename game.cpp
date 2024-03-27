@@ -28,9 +28,14 @@ game::game() {
 }
 
 void game::run() {
+	float last_time = 0.f;
 	while (m_window.isOpen()) {
+		float cur_time = m_clock.getElapsedTime().asSeconds();
+		float delta_time = cur_time - last_time;
+		last_time = cur_time;
+
 		m_controller->handle_input(m_window);
-		m_game_impl->update(*m_network.get());
+		m_game_impl->update(*m_network.get(), delta_time);
 		m_game_impl->render(m_window);
 	}
 }
@@ -82,23 +87,23 @@ void game_instance::draw_score(sf::Text &out_score, int in_score, bool is_first_
 	}
 }
 
-void server::update(network &in_network) {
-	float cur_time = m_clock.getElapsedTime().asSeconds();
-	float delta_time = cur_time - last_time;
-	last_time = cur_time;
-
+void server::update(network &in_network, float delta_time) {
 	m_court->update(delta_time);
 	if (m_court->check_ball_position()) {
 		on_score_change(in_network);
 	}
 
-	sf::Packet obj_pack;
-	for (objects::const_iterator it = m_court->get_objects().begin(); it != m_court->get_objects().end(); ++it) {
-		if ((*it)->m_global_idx == std::numeric_limits<unsigned int>::max()) continue;
-		if (!(*it)->is_moving) continue;
-		obj_pack << (*it)->m_global_idx << (*it)->m_position.x << (*it)->m_position.y;
-		in_network.send_data(obj_pack, OBJECTS_TOKEN);
-		obj_pack.clear();
+	m_network_time -= delta_time;
+	if (m_network_time < 0.f) {
+		sf::Packet obj_pack;
+		for (objects::const_iterator it = m_court->get_objects().begin(); it != m_court->get_objects().end(); ++it) {
+			if ((*it)->m_global_idx == std::numeric_limits<unsigned int>::max()) continue;
+			if (!(*it)->is_moving) continue;
+			obj_pack << (*it)->m_global_idx << (*it)->m_position.x << (*it)->m_position.y;
+			in_network.send_data(obj_pack, OBJECTS_TOKEN);
+			obj_pack.clear();
+		}
+		m_network_time = m_network_delay;
 	}
 }
 
@@ -112,6 +117,6 @@ void server::on_score_change(network &in_network) {
 	m_court->restart();
 }
 
-void client::update(network &in_network) {
+void client::update(network &in_network, float delta_time) {
 	in_network.receive_data(*m_court);
 }

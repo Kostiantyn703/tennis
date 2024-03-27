@@ -83,7 +83,6 @@ void player::move(sf::Vector2f &in_offset) {
 	if ((m_position.y + abs(in_offset.y) - m_position.y) > 0.001f) {
 		is_moving = true;
 	}
-	std::cout << "Offset " << in_offset.x << in_offset.y << std::endl;
 
 	for (shapes::iterator it = m_visual.m_shapes.begin(); it != m_visual.m_shapes.end(); ++it) {
 		it->move(in_offset);
