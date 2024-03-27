@@ -25,16 +25,15 @@ private:
 	std::unique_ptr<controller> m_controller;
 
 	sf::RenderWindow m_window;
-
 };
 
 class game_instance {
 public: 
 	virtual ~game_instance() {}
 
-	virtual void update(network &in_network) = 0;
-
 	void init(controller &in_controller);
+
+	virtual void update(network &in_network) = 0;
 
 	void render(sf::RenderWindow &in_window);
 
@@ -58,9 +57,6 @@ public:
 	void on_score_change(network &in_network);
 
 private:
-	float m_time_to_send = 0.f;
-	float m_send_delay = 0.0045f;
-
 	float last_time = 0.f;
 	sf::Clock m_clock;
 };
@@ -71,4 +67,5 @@ public:
 	virtual ~client() {}
 
 	virtual void update(network &in_network) override;
+
 };

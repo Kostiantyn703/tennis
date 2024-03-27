@@ -9,6 +9,7 @@ constexpr float PADDLE_OFFSET_Y = 45.f;
 
 ball::ball() {
 	m_shape.setRadius(10.f);
+	is_moving = true;
 }
 
 ball::~ball() {}

@@ -1,6 +1,6 @@
 #pragma once
 
-static const char *TITLE		= "TENNIS";
+static const char *TITLE		= "TENNIS ";
 static const char *FONT_PATH	= "score_font.ttf";
 
 constexpr size_t WINDOW_HEIGHT	= 600;

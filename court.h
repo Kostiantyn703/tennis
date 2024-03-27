@@ -40,6 +40,7 @@ public:
 
 	void init();
 	void init_player(controller &out_controller);
+	void init_player(); // second player init
 
 	void update(float delta_time);
 	bool check_ball_position();
@@ -56,7 +57,10 @@ private:
 	score_board m_score;
 
 	player *m_player_one = nullptr;
+	player *m_player_two = nullptr;
 	ball *m_ball_slot = nullptr;
+
+	size_t m_winner = 0;
 
 	std::vector<sf::Vector2f> m_players_pos;
 };

@@ -5,15 +5,22 @@
 #include <stdlib.h>
 
 game::game() {
-	m_window.create(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), TITLE);
-
+	m_window.create(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), TITLE, sf::Style::Titlebar | sf::Style::Close);
 	m_network = std::make_unique<network>();
 	if (m_network->get_role() == network_role::nr_server) {
+		std::string final_title(TITLE);
+		final_title.append(SERVER_STR);
+		m_window.setTitle(final_title);
+
 		m_game_impl = std::make_unique<server>();
 		m_controller = std::make_unique<controller>();
 		m_game_impl->init(*m_controller.get());
 	}
 	if (m_network->get_role() == network_role::nr_client) {
+		std::string final_title(TITLE);
+		final_title.append(CLIENT_STR);
+		m_window.setTitle(final_title);
+
 		m_game_impl = std::make_unique<client>();
 		m_controller = std::make_unique<controller>();
 		m_game_impl->init(*m_controller.get());
@@ -36,6 +43,7 @@ void game_instance::init(controller &in_controller) {
 	m_court = std::make_unique<court>();
 	m_court->init();
 	m_court->init_player(in_controller);
+	m_court->init_player();
 }
 
 void game_instance::render(sf::RenderWindow &in_window) {
@@ -78,20 +86,19 @@ void server::update(network &in_network) {
 	float cur_time = m_clock.getElapsedTime().asSeconds();
 	float delta_time = cur_time - last_time;
 	last_time = cur_time;
+
 	m_court->update(delta_time);
 	if (m_court->check_ball_position()) {
 		on_score_change(in_network);
 	}
-	
-	m_time_to_send -= delta_time;
-	if (m_time_to_send < 0.f) {
-		sf::Packet obj_pack;
-		for (objects::const_iterator it = m_court->get_objects().begin(); it != m_court->get_objects().end(); ++it) {
-			if ((*it)->m_global_idx == std::numeric_limits<unsigned int>::max()) continue;
-			obj_pack << (*it)->m_global_idx << (*it)->m_position.x << (*it)->m_position.y;
-			in_network.send_data(obj_pack, OBJECTS_TOKEN);
-		}
-		m_time_to_send = m_send_delay;
+
+	sf::Packet obj_pack;
+	for (objects::const_iterator it = m_court->get_objects().begin(); it != m_court->get_objects().end(); ++it) {
+		if ((*it)->m_global_idx == std::numeric_limits<unsigned int>::max()) continue;
+		if (!(*it)->is_moving) continue;
+		obj_pack << (*it)->m_global_idx << (*it)->m_position.x << (*it)->m_position.y;
+		in_network.send_data(obj_pack, OBJECTS_TOKEN);
+		obj_pack.clear();
 	}
 }
 
@@ -106,6 +113,5 @@ void server::on_score_change(network &in_network) {
 }
 
 void client::update(network &in_network) {
-
 	in_network.receive_data(*m_court);
 }

@@ -28,4 +28,6 @@ public:
 
 	sf::Vector2f m_position;
 
+	bool is_moving = false;
+
 };

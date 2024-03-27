@@ -4,6 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <algorithm>
 
 #include "court.h"
 
@@ -42,20 +43,22 @@ void network::receive_data(court &in_court) {
 	}
 
 	if (m_config.m_objects_socket.receive(packet, addr, port) == sf::Socket::Status::Done) {
-		for (objects::const_iterator it = in_court.get_objects().begin(); it != in_court.get_objects().end(); ++it) {
-			if ((*it)->m_global_idx == std::numeric_limits<unsigned int>::max()) continue;
-			float coord_x = 0.f;
-			float coord_y = 0.f;
-			unsigned int idx = 0;
-			if (packet >> idx >> coord_x >> coord_y) {
-				if (idx == (*it)->m_global_idx) {
-					sf::Vector2f cur_pos(coord_x, coord_y);
-					(*it)->m_position = cur_pos;
-					(*it)->on_set_position();
-				}
+		float coord_x = 0.f;
+		float coord_y = 0.f;
+		unsigned int idx = 0;
+		if (packet >> idx >> coord_x >> coord_y) {
+			auto search_pred = [&idx](object *obj) {
+				return obj->m_global_idx == idx;
+			};
+			auto it = std::find_if(in_court.get_objects().begin(), in_court.get_objects().end(), search_pred);
+			if (it != in_court.get_objects().end()) {
+				sf::Vector2f cur_pos(coord_x, coord_y);
+				(*it)->m_position = cur_pos;
+				(*it)->on_set_position();
 			}
 		}
 	}
+	packet.clear();
 }
 
 void network::parse_role(std::string &out_result) {
@@ -83,6 +86,7 @@ void network::configure() {
 	}
 	m_config.m_score_socket.setBlocking(false);
 	m_config.m_objects_socket.setBlocking(false);
+	//m_config.m_client_input_socket.setBlocking(false);
 }
 
 void network::set_role(const std::string &in_role) {
@@ -99,7 +103,7 @@ void network::set_role(const std::string &in_role) {
 void network::init_server() {
 	m_config.m_score_socket.bind(SERVER_SCORE_PORT);
 	m_config.m_objects_socket.bind(SERVER_OBJECTS_PORT);
-
+	//m_config.m_client_input_socket.bind(SERVER_RECEIVE_INPUT_PORT);
 	m_config.m_connect_listener.listen(CONNECTION_PORT);
 	if (m_config.m_connect_listener.accept(m_config.m_connect_socket) == sf::Socket::Done) {
 		std::cout << "Client connected\n";
@@ -109,7 +113,7 @@ void network::init_server() {
 void network::init_client() {
 	m_config.m_score_socket.bind(CLIENT_SCORE_PORT);
 	m_config.m_objects_socket.bind(CLIENT_OBJECTS_PORT);
-
+	//m_config.m_client_input_socket.bind(CLIENT_SEND_INPUT_PORT);
 	if (m_config.m_connect_socket.connect(m_config.m_address, CONNECTION_PORT) == sf::Socket::Done) {
 		std::cout << "Connected to server.\n";
 	}

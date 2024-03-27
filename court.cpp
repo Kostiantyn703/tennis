@@ -20,8 +20,7 @@ void border::draw(sf::RenderWindow &in_window) {
 
 court::court() {
 	m_players_pos.push_back(sf::Vector2f(50.f, WINDOW_HEIGHT * 0.25f));
-	m_players_pos.push_back(sf::Vector2f(WINDOW_WIDTH - 60.f, WINDOW_HEIGHT * 0.25f));
-	//m_players_pos.push_back(sf::Vector2f(WINDOW_WIDTH - 60.f, WINDOW_HEIGHT * 0.65f));
+	m_players_pos.push_back(sf::Vector2f(WINDOW_WIDTH - 60.f, WINDOW_HEIGHT * 0.65f));
 }
 
 court::~court() {
@@ -43,12 +42,12 @@ void court::init() {
 
 void court::init_player(controller &out_controller) {
 	player *cur_player = new player(m_players_pos[0]);
-	cur_player->set_idx(0);
+	cur_player->set_idx(1);
 	m_player_one = cur_player;
 
 	sf::Vector2f ball_pos(WINDOW_WIDTH * 0.5f, WINDOW_HEIGHT * 0.5f);
 	ball *cur_ball = new ball;
-	cur_ball->set_position(ball_pos);
+	cur_ball->set_position(m_players_pos[0]);
 	cur_ball->m_global_idx = (unsigned int)m_objects.size();
 	m_objects.push_back(cur_ball);
 
@@ -59,7 +58,26 @@ void court::init_player(controller &out_controller) {
 
 	cur_player->m_global_idx = (unsigned int)m_objects.size();
 	m_objects.push_back(cur_player);
+}
 
+void court::init_player() {
+	player *cur_player = new player(m_players_pos[1]);
+	cur_player->set_idx(2);
+	m_player_two = cur_player;
+
+	/*sf::Vector2f ball_pos(WINDOW_WIDTH * 0.5f, WINDOW_HEIGHT * 0.5f);
+	ball *cur_ball = new ball;
+	cur_ball->set_position(ball_pos);
+	cur_ball->m_global_idx = (unsigned int)m_objects.size();
+	m_objects.push_back(cur_ball);
+*/
+	/*m_ball_slot = cur_ball;
+	cur_player->m_ball_slot = cur_ball;
+*/
+	//out_controller.set_owner(*cur_player);
+
+	cur_player->m_global_idx = (unsigned int)m_objects.size();
+	m_objects.push_back(cur_player);
 }
 
 void court::update(float delta_time) {
