@@ -62,7 +62,7 @@ void court::init_player(controller &out_controller) {
 
 }
 
-void court::update(game_instance &in_game, float delta_time) {
+void court::update(float delta_time) {
 	for (objects::iterator it = m_objects.begin(); it != m_objects.end(); ++it) {
 		(*it)->update(delta_time);
 		for (objects::iterator local_it = m_objects.begin(); local_it != m_objects.end(); ++local_it) {
@@ -71,15 +71,20 @@ void court::update(game_instance &in_game, float delta_time) {
 			}
 		}
 	}
+}
 
-	if (m_ball_slot->get_shape().getPosition().x < 0.f) {
+bool court::check_ball_position() {
+	bool result = false;
+	float ball_pos = m_ball_slot->get_shape().getPosition().x;
+	if (ball_pos < 0.f) {
 		m_score.player_two++;
-		in_game.on_score_change();
+		result = true;
 	}
 	if (m_ball_slot->get_shape().getPosition().x > WINDOW_WIDTH) {
 		m_score.player_one++;
-		in_game.on_score_change();
+		result = true;
 	}
+	return result;
 }
 
 void court::restart() {

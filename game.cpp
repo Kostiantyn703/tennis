@@ -38,17 +38,6 @@ void game_instance::init(controller &in_controller) {
 	m_court->init_player(in_controller);
 }
 
-void game_instance::on_score_change() {
-	/*sf::Packet packet;
-	score_board cur_score = m_court->get_score();
-	packet << cur_score.player_one << cur_score.player_two;
-
-	m_network.send_data(packet, SCORE_TOKEN); */
-
-	m_court->restart();
-}
-
-
 void game_instance::render(sf::RenderWindow &in_window) {
 	in_window.clear();
 	objects objs = m_court->get_objects();
@@ -89,7 +78,11 @@ void server::update(network &in_network) {
 	float cur_time = m_clock.getElapsedTime().asSeconds();
 	float delta_time = cur_time - last_time;
 	last_time = cur_time;
-	m_court->update(*this, delta_time);
+	m_court->update(delta_time);
+	if (m_court->check_ball_position()) {
+		on_score_change(in_network);
+	}
+	
 	m_time_to_send -= delta_time;
 	if (m_time_to_send < 0.f) {
 		sf::Packet obj_pack;
@@ -98,8 +91,18 @@ void server::update(network &in_network) {
 			obj_pack << (*it)->m_global_idx << (*it)->m_position.x << (*it)->m_position.y;
 			in_network.send_data(obj_pack, OBJECTS_TOKEN);
 		}
-		m_time_to_send = m_max_time;
+		m_time_to_send = m_send_delay;
 	}
+}
+
+void server::on_score_change(network &in_network) {
+	sf::Packet packet;
+	score_board cur_score = m_court->get_score();
+	packet << cur_score.player_one << cur_score.player_two;
+
+	in_network.send_data(packet, SCORE_TOKEN);
+
+	m_court->restart();
 }
 
 void client::update(network &in_network) {

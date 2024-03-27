@@ -41,7 +41,8 @@ public:
 	void init();
 	void init_player(controller &out_controller);
 
-	void update(game_instance &in_game, float delta_time);
+	void update(float delta_time);
+	bool check_ball_position();
 
 	const objects &get_objects() const { return m_objects; }
 	const score_board &get_score() const { return m_score; }

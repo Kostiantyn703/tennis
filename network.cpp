@@ -17,30 +17,29 @@ network::network() {
 }
 
 void network::send_data(sf::Packet &in_packet, const std::string in_data_token) {
-	/*if (!in_data_token.compare(SCORE_TOKEN)) {
+	if (!in_data_token.compare(SCORE_TOKEN)) {
 		m_config.m_score_socket.send(in_packet, m_config.m_address, CLIENT_SCORE_PORT);
-	}*/
+	}
 	if (!in_data_token.compare(OBJECTS_TOKEN)) {
 		m_config.m_objects_socket.send(in_packet, m_config.m_address, CLIENT_OBJECTS_PORT);
 	}
-
 }
 
 void network::receive_data(court &in_court) {
 	sf::Packet packet;
 	sf::IpAddress addr;
 	unsigned short port = 0;
-	//if (m_config.m_score_socket.receive(packet, addr, port) == sf::Socket::Status::Done) {
-	//	score_board cur_score;
-	//	sf::Uint16 one;
-	//	sf::Uint16 two;
-	//	packet >> one >> two;
+	if (m_config.m_score_socket.receive(packet, addr, port) == sf::Socket::Status::Done) {
+		score_board cur_score;
+		sf::Uint16 one;
+		sf::Uint16 two;
+		packet >> one >> two;
 
-	//	cur_score.player_one = one;
-	//	cur_score.player_two = two;
+		cur_score.player_one = one;
+		cur_score.player_two = two;
 
-	//	in_court.set_score(cur_score);
-	//}
+		in_court.set_score(cur_score);
+	}
 
 	if (m_config.m_objects_socket.receive(packet, addr, port) == sf::Socket::Status::Done) {
 		for (objects::const_iterator it = in_court.get_objects().begin(); it != in_court.get_objects().end(); ++it) {

@@ -35,7 +35,6 @@ public:
 	virtual void update(network &in_network) = 0;
 
 	void init(controller &in_controller);
-	void on_score_change();
 
 	void render(sf::RenderWindow &in_window);
 
@@ -55,6 +54,8 @@ public:
 	virtual ~server() {}
 
 	virtual void update(network &in_network) override;
+	
+	void on_score_change(network &in_network);
 
 private:
 	float m_time_to_send = 0.f;
