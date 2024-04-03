@@ -9,7 +9,7 @@
 using objects = std::vector<object*>;
 
 class game_instance;
-class controller;
+class icontroller;
 
 class border : public object {
 public:
@@ -39,8 +39,8 @@ public:
 	~court();
 
 	void init();
-	void init_player(controller &out_controller);
-	void init_player(); // second player init
+	void init_player(icontroller &out_controller, size_t in_player_id);
+	void init_player(size_t in_player_id);
 
 	void update(float delta_time);
 	bool check_ball_position();

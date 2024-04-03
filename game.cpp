@@ -7,14 +7,14 @@
 game::game() {
 	m_window.create(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), TITLE, sf::Style::Titlebar | sf::Style::Close);
 	m_network = std::make_unique<network>();
+	m_input = std::make_unique<input_receiver>();
 	if (m_network->get_role() == network_role::nr_server) {
 		std::string final_title(TITLE);
 		final_title.append(SERVER_STR);
 		m_window.setTitle(final_title);
 
 		m_game_impl = std::make_unique<server>();
-		m_controller = std::make_unique<controller>();
-		m_game_impl->init(*m_controller.get());
+		m_game_impl->init();
 	}
 	if (m_network->get_role() == network_role::nr_client) {
 		std::string final_title(TITLE);
@@ -22,8 +22,7 @@ game::game() {
 		m_window.setTitle(final_title);
 
 		m_game_impl = std::make_unique<client>();
-		m_controller = std::make_unique<controller>();
-		m_game_impl->init(*m_controller.get());
+		m_game_impl->init();
 	}
 }
 
@@ -34,21 +33,20 @@ void game::run() {
 		float delta_time = cur_time - last_time;
 		last_time = cur_time;
 
-		m_controller->handle_input(m_window);
+		input_event cur_event = m_input->receive_input(m_window);
+		m_game_impl->handle_input(cur_event);
 		m_game_impl->update(*m_network.get(), delta_time);
 		m_game_impl->render(m_window);
 	}
 }
 
-void game_instance::init(controller &in_controller) {
+void game_instance::init() {
 	if (!m_font.loadFromFile(FONT_PATH)) {
 		std::cout << "Failed to load font." << std::endl;
 	}
 
 	m_court = std::make_unique<court>();
 	m_court->init();
-	m_court->init_player(in_controller);
-	m_court->init_player();
 }
 
 void game_instance::render(sf::RenderWindow &in_window) {
@@ -87,6 +85,13 @@ void game_instance::draw_score(sf::Text &out_score, int in_score, bool is_first_
 	}
 }
 
+void server::init() {
+	game_instance::init();
+	m_controller = std::make_unique<controller>();
+	m_court->init_player(*m_controller.get(), 0);
+	m_court->init_player(1);
+}
+
 void server::update(network &in_network, float delta_time) {
 	m_court->update(delta_time);
 	if (m_court->check_ball_position()) {
@@ -107,6 +112,11 @@ void server::update(network &in_network, float delta_time) {
 	}
 }
 
+void server::handle_input(input_event in_input) {
+	m_controller->process_input(in_input);
+}
+
+
 void server::on_score_change(network &in_network) {
 	sf::Packet packet;
 	score_board cur_score = m_court->get_score();
@@ -115,6 +125,10 @@ void server::on_score_change(network &in_network) {
 	in_network.send_data(packet, SCORE_TOKEN);
 
 	m_court->restart();
+}
+
+void client::init() {
+
 }
 
 void client::update(network &in_network, float delta_time) {

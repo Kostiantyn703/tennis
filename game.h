@@ -22,20 +22,22 @@ private:
 	std::unique_ptr<network> m_network;
 
 	std::unique_ptr<game_instance> m_game_impl;
-	std::unique_ptr<controller> m_controller;
 
 	sf::RenderWindow m_window;
 
 	sf::Clock m_clock;
+
+	std::unique_ptr<input_receiver> m_input;
 };
 
 class game_instance {
 public: 
 	virtual ~game_instance() {}
 
-	void init(controller &in_controller);
+	virtual void init();
 
 	virtual void update(network &in_network, float delta_time) = 0;
+	virtual void handle_input(input_event in_input) = 0;
 
 	void render(sf::RenderWindow &in_window);
 
@@ -54,9 +56,15 @@ public:
 	server() {}
 	virtual ~server() {}
 
+	virtual void init() override;
+
 	virtual void update(network &in_network, float delta_time) override;
-	
+	virtual void handle_input(input_event in_input) override;
+
 	void on_score_change(network &in_network);
+
+private:
+	std::unique_ptr<icontroller> m_controller;
 
 	float m_network_delay = 0.0045f;
 	float m_network_time = 0.f;
@@ -67,6 +75,12 @@ public:
 	client() {}
 	virtual ~client() {}
 
+	virtual void init() override;
+
 	virtual void update(network &in_network, float delta_time) override;
+	virtual void handle_input(input_event in_input) override {}
+
+
+	std::unique_ptr<icontroller> m_controller;
 
 };

@@ -2,6 +2,8 @@
 
 #include <SFML/Graphics.hpp>
 
+class ball;
+
 class icontrollable {
 public:
 	virtual ~icontrollable() {}
@@ -11,6 +13,8 @@ public:
 
 	bool upper_block = false;
 	bool lower_block = false;
+
+	ball *m_ball_slot = nullptr;
 };
 
 class object {
