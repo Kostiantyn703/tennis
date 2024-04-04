@@ -105,10 +105,10 @@ void network::init_server() {
 	m_config.m_score_socket.bind(SERVER_SCORE_PORT);
 	m_config.m_objects_socket.bind(SERVER_OBJECTS_PORT);
 	//m_config.m_client_input_socket.bind(SERVER_RECEIVE_INPUT_PORT);
-	/*m_config.m_connect_listener.listen(CONNECTION_PORT);
+	m_config.m_connect_listener.listen(CONNECTION_PORT);
 	if (m_config.m_connect_listener.accept(m_config.m_connect_socket) == sf::Socket::Done) {
 		std::cout << "Client connected\n";
-	}*/
+	}
 }
 
 void network::init_client() {

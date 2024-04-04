@@ -44,7 +44,7 @@ void game_instance::init() {
 	if (!m_font.loadFromFile(FONT_PATH)) {
 		std::cout << "Failed to load font." << std::endl;
 	}
-
+	m_controller = std::make_unique<controller>();
 	m_court = std::make_unique<court>();
 	m_court->init();
 }
@@ -87,7 +87,7 @@ void game_instance::draw_score(sf::Text &out_score, int in_score, bool is_first_
 
 void server::init() {
 	game_instance::init();
-	m_controller = std::make_unique<controller>();
+
 	m_court->init_player(*m_controller.get(), 0);
 	m_court->init_player(1);
 }
@@ -116,7 +116,6 @@ void server::handle_input(input_event in_input) {
 	m_controller->process_input(in_input);
 }
 
-
 void server::on_score_change(network &in_network) {
 	sf::Packet packet;
 	score_board cur_score = m_court->get_score();
@@ -128,7 +127,10 @@ void server::on_score_change(network &in_network) {
 }
 
 void client::init() {
+	game_instance::init();
 
+	m_court->init_player(0);
+	m_court->init_player(*m_controller.get(), 1);
 }
 
 void client::update(network &in_network, float delta_time) {
