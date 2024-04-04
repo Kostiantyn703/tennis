@@ -32,8 +32,8 @@ void player::update(float in_delta_time) {
 	sf::Vector2f offset(0.f, m_cur_speed * in_delta_time);
 	move(offset);
 	set_position(m_position);
-	if (m_ball_slot) {
-		m_ball_slot->set_position(m_position);
+	if (p_ball_slot) {
+		p_ball_slot->set_position(m_position);
 	}
 }
 
@@ -60,9 +60,9 @@ bool player::on_intersect(const sf::FloatRect &in_rect, int &out_idx) {
 }
 
 void player::launch() {
-	if (m_ball_slot) {
-		m_ball_slot->is_sticked = false;
-		m_ball_slot = nullptr;
+	if (p_ball_slot) {
+		p_ball_slot->is_sticked = false;
+		p_ball_slot = nullptr;
 	}
 }
 

@@ -39,8 +39,8 @@ public:
 	~court();
 
 	void init();
-	void init_player(icontroller &out_controller, size_t in_player_id);
-	void init_player(size_t in_player_id);
+	player *create_player(icontroller &out_controller, size_t in_player_id);
+	player *create_player(size_t in_player_id);
 
 	void update(float delta_time);
 	bool check_ball_position();
@@ -52,13 +52,15 @@ public:
 
 	void restart();
 
+	player *p_player_one = nullptr;
+	player *p_player_two = nullptr;
+
 private:
 	objects m_objects;
 	score_board m_score;
 
-	player *m_player_one = nullptr;
-	player *m_player_two = nullptr;
-	ball *m_ball_slot = nullptr;
+	
+	ball *p_ball_slot = nullptr;
 
 	size_t m_winner = 0;
 

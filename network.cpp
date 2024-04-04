@@ -24,24 +24,15 @@ void network::send_data(sf::Packet &in_packet, const std::string in_data_token) 
 	if (!in_data_token.compare(OBJECTS_TOKEN)) {
 		m_config.m_objects_socket.send(in_packet, m_config.m_address, CLIENT_OBJECTS_PORT);
 	}
+	if (!in_data_token.compare(CLIENT_INPUT_TOKEN)) {
+		m_config.m_input_socket.send(in_packet, m_config.m_address, SERVER_INPUT_PORT);
+	}
 }
 
 void network::receive_data(court &in_court) {
 	sf::Packet packet;
 	sf::IpAddress addr;
 	unsigned short port = 0;
-	if (m_config.m_score_socket.receive(packet, addr, port) == sf::Socket::Status::Done) {
-		score_board cur_score;
-		sf::Uint16 one;
-		sf::Uint16 two;
-		packet >> one >> two;
-
-		cur_score.player_one = one;
-		cur_score.player_two = two;
-
-		in_court.set_score(cur_score);
-	}
-
 	if (m_config.m_objects_socket.receive(packet, addr, port) == sf::Socket::Status::Done) {
 		float coord_x = 0.f;
 		float coord_y = 0.f;
@@ -61,6 +52,41 @@ void network::receive_data(court &in_court) {
 	packet.clear();
 }
 
+void network::receive_score(court &in_court) {
+	sf::Packet packet;
+	sf::IpAddress addr;
+	unsigned short port = 0;
+	if (m_config.m_score_socket.receive(packet, addr, port) == sf::Socket::Status::Done) {
+		score_board cur_score;
+		sf::Uint16 one;
+		sf::Uint16 two;
+		packet >> one >> two;
+
+		cur_score.player_one = one;
+		cur_score.player_two = two;
+
+		in_court.set_score(cur_score);
+	}
+	packet.clear();
+}
+
+void network::receive_input(court &in_court) {
+	sf::Packet packet;
+	sf::IpAddress addr;
+	unsigned short port = 0;
+	if (m_config.m_input_socket.receive(packet, addr, port) == sf::Socket::Status::Done) {
+		sf::Int8 data;
+		packet >> data;
+		if (data != 2) {
+			in_court.p_player_two->set_movement(data);
+		} else {
+			in_court.p_player_two->launch();
+		}
+	}
+	packet.clear();
+}
+
+
 void network::parse_role(std::string &out_result) {
 	std::ifstream read_stream(NETWORK_CONFIG_FILENAME);
 	if (!read_stream.is_open()) {
@@ -77,7 +103,6 @@ void network::configure() {
 	switch (m_config.m_role) {
 	case network_role::nr_server:
 		init_server();
-		
 		break;
 	case network_role::nr_client:
 		init_client();
@@ -87,7 +112,7 @@ void network::configure() {
 	}
 	m_config.m_score_socket.setBlocking(false);
 	m_config.m_objects_socket.setBlocking(false);
-	//m_config.m_client_input_socket.setBlocking(false);
+	m_config.m_input_socket.setBlocking(false);
 }
 
 void network::set_role(const std::string &in_role) {
@@ -104,7 +129,7 @@ void network::set_role(const std::string &in_role) {
 void network::init_server() {
 	m_config.m_score_socket.bind(SERVER_SCORE_PORT);
 	m_config.m_objects_socket.bind(SERVER_OBJECTS_PORT);
-	//m_config.m_client_input_socket.bind(SERVER_RECEIVE_INPUT_PORT);
+	m_config.m_input_socket.bind(SERVER_INPUT_PORT);
 	m_config.m_connect_listener.listen(CONNECTION_PORT);
 	if (m_config.m_connect_listener.accept(m_config.m_connect_socket) == sf::Socket::Done) {
 		std::cout << "Client connected\n";
@@ -114,7 +139,7 @@ void network::init_server() {
 void network::init_client() {
 	m_config.m_score_socket.bind(CLIENT_SCORE_PORT);
 	m_config.m_objects_socket.bind(CLIENT_OBJECTS_PORT);
-	//m_config.m_client_input_socket.bind(CLIENT_SEND_INPUT_PORT);
+	m_config.m_input_socket.bind(CLIENT_INPUT_PORT);
 	if (m_config.m_connect_socket.connect(m_config.m_address, CONNECTION_PORT) == sf::Socket::Done) {
 		std::cout << "Connected to server.\n";
 	}

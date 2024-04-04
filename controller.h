@@ -6,10 +6,10 @@
 #include "interfaces.h"
 
 enum input_event {
-	ie_up,
-	ie_down,
-	ie_launch,
-	ie_none
+	ie_up		= -1,
+	ie_down		= 1,
+	ie_launch	= 2,
+	ie_none		= 0
 };
 
 class input_receiver {

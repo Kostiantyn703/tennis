@@ -56,7 +56,7 @@ void controller::move_down() {
 }
 
 void controller::launch_ball() {
-	if (m_owner->m_ball_slot) {
+	if (m_owner->p_ball_slot) {
 		m_owner->launch();
 	}
 }

@@ -34,7 +34,7 @@ void game::run() {
 		last_time = cur_time;
 
 		input_event cur_event = m_input->receive_input(m_window);
-		m_game_impl->handle_input(cur_event);
+		m_game_impl->handle_input(*m_network.get(), cur_event);
 		m_game_impl->update(*m_network.get(), delta_time);
 		m_game_impl->render(m_window);
 	}
@@ -87,9 +87,8 @@ void game_instance::draw_score(sf::Text &out_score, int in_score, bool is_first_
 
 void server::init() {
 	game_instance::init();
-
-	m_court->init_player(*m_controller.get(), 0);
-	m_court->init_player(1);
+	m_court->p_player_one = m_court->create_player(*m_controller.get(), 0);
+	m_court->p_player_two = m_court->create_player(1);
 }
 
 void server::update(network &in_network, float delta_time) {
@@ -97,9 +96,9 @@ void server::update(network &in_network, float delta_time) {
 	if (m_court->check_ball_position()) {
 		on_score_change(in_network);
 	}
+	m_court->p_player_two->set_movement(0);
 
-	m_network_time -= delta_time;
-	if (m_network_time < 0.f) {
+	if (m_frame_count % m_frame_divider == 0) {
 		sf::Packet obj_pack;
 		for (objects::const_iterator it = m_court->get_objects().begin(); it != m_court->get_objects().end(); ++it) {
 			if ((*it)->m_global_idx == std::numeric_limits<unsigned int>::max()) continue;
@@ -108,12 +107,13 @@ void server::update(network &in_network, float delta_time) {
 			in_network.send_data(obj_pack, OBJECTS_TOKEN);
 			obj_pack.clear();
 		}
-		m_network_time = m_network_delay;
 	}
+	m_frame_count++;
 }
 
-void server::handle_input(input_event in_input) {
+void server::handle_input(network &in_network, input_event in_input) {
 	m_controller->process_input(in_input);
+	in_network.receive_input(*m_court.get());
 }
 
 void server::on_score_change(network &in_network) {
@@ -129,10 +129,22 @@ void server::on_score_change(network &in_network) {
 void client::init() {
 	game_instance::init();
 
-	m_court->init_player(0);
-	m_court->init_player(*m_controller.get(), 1);
+	m_court->create_player(0);
+	m_court->create_player(1); // *m_controller.get(), 
 }
 
 void client::update(network &in_network, float delta_time) {
 	in_network.receive_data(*m_court);
+	in_network.receive_score(*m_court);
+
+	m_frame_count++;
+}
+
+void client::handle_input(network &in_network, input_event in_input) {
+	if (m_frame_count % m_frame_divider != 0) return;
+	if (in_input == 0) return;
+	sf::Packet pack;
+	sf::Int8 data = in_input;
+	pack << data;
+	in_network.send_data(pack, CLIENT_INPUT_TOKEN);
 }

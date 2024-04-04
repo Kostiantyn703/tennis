@@ -37,13 +37,16 @@ public:
 	virtual void init();
 
 	virtual void update(network &in_network, float delta_time) = 0;
-	virtual void handle_input(input_event in_input) = 0;
+	virtual void handle_input(network &in_network, input_event in_input) = 0;
 
 	void render(sf::RenderWindow &in_window);
 
 protected:
 	std::unique_ptr<court> m_court;
 	std::unique_ptr<icontroller> m_controller;
+
+	size_t m_frame_count = 0;
+	size_t m_frame_divider = 4;
 
 private:
 	void draw_score(sf::Text &out_score, int in_score, bool is_first_player);
@@ -60,14 +63,9 @@ public:
 	virtual void init() override;
 
 	virtual void update(network &in_network, float delta_time) override;
-	virtual void handle_input(input_event in_input) override;
+	virtual void handle_input(network &in_network, input_event in_input) override;
 
 	void on_score_change(network &in_network);
-
-private:
-
-	float m_network_delay = 0.0045f;
-	float m_network_time = 0.f;
 };
 
 class client : public game_instance {
@@ -78,6 +76,5 @@ public:
 	virtual void init() override;
 
 	virtual void update(network &in_network, float delta_time) override;
-	virtual void handle_input(input_event in_input) override {}
-
+	virtual void handle_input(network &in_network, input_event in_input) override;
 };

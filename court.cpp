@@ -40,10 +40,10 @@ void court::init() {
 	m_objects.push_back(lower_border);
 }
 
-void court::init_player(icontroller &out_controller, size_t in_player_id) {
+player *court::create_player(icontroller &out_controller, size_t in_player_id) {
 	player *cur_player = new player(m_players_pos[in_player_id]);
 	cur_player->set_player_id(in_player_id);
-	m_player_one = cur_player;
+
 	// TODO: move ball init to another place
 	/*sf::Vector2f ball_pos(WINDOW_WIDTH * 0.5f, WINDOW_HEIGHT * 0.5f);
 	ball *cur_ball = new ball;
@@ -51,22 +51,25 @@ void court::init_player(icontroller &out_controller, size_t in_player_id) {
 	cur_ball->m_global_idx = (unsigned int)m_objects.size();
 	m_objects.push_back(cur_ball);
 */
-	//m_ball_slot = cur_ball;
-	//cur_player->m_ball_slot = cur_ball;
+	//p_ball_slot = cur_ball;
+	//cur_player->p_ball_slot = cur_ball;
 
 	out_controller.set_owner(*cur_player);
 
 	cur_player->m_global_idx = (unsigned int)m_objects.size();
 	m_objects.push_back(cur_player);
+
+	return cur_player;
 }
 
-void court::init_player(size_t in_player_id) {
+player *court::create_player(size_t in_player_id) {
 	player *cur_player = new player(m_players_pos[in_player_id]);
 	cur_player->set_player_id(in_player_id);
-	m_player_two = cur_player;
 
 	cur_player->m_global_idx = (unsigned int)m_objects.size();
 	m_objects.push_back(cur_player);
+
+	return cur_player;
 }
 
 void court::update(float delta_time) {
@@ -82,13 +85,13 @@ void court::update(float delta_time) {
 
 bool court::check_ball_position() {
 	bool result = false;
-	if (!m_ball_slot) return result;
-	float ball_pos = m_ball_slot->get_shape().getPosition().x;
+	if (!p_ball_slot) return result;
+	float ball_pos = p_ball_slot->get_shape().getPosition().x;
 	if (ball_pos < 0.f) {
 		m_score.player_two++;
 		result = true;
 	}
-	if (m_ball_slot->get_shape().getPosition().x > WINDOW_WIDTH) {
+	if (p_ball_slot->get_shape().getPosition().x > WINDOW_WIDTH) {
 		m_score.player_one++;
 		result = true;
 	}
@@ -98,9 +101,10 @@ bool court::check_ball_position() {
 void court::restart() {
 	for (objects::iterator it = m_objects.begin(); it != m_objects.end(); ++it) {
 		if (ball *cur_ball = dynamic_cast<ball*>(*it)) {
-			cur_ball->set_position(m_player_one->get_position());
+		// TODO
+			cur_ball->set_position(p_player_one->get_position());
 			cur_ball->is_sticked = true;
-			m_player_one->m_ball_slot = cur_ball;
+			p_player_one->p_ball_slot = cur_ball;
 			continue;
 		}
 	}
