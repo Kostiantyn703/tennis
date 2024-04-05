@@ -11,12 +11,10 @@ game::game() {
 	if (m_network->get_role() == network_role::nr_server) {
 		set_name(SERVER_STR);
 		m_game_impl = std::make_unique<server>();
-		m_game_impl->init();
 	}
 	if (m_network->get_role() == network_role::nr_client) {
 		set_name(CLIENT_STR);
 		m_game_impl = std::make_unique<client>();
-		m_game_impl->init();
 	}
 }
 
