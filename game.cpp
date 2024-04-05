@@ -9,18 +9,12 @@ game::game() {
 	m_network = std::make_unique<network>();
 	m_input = std::make_unique<input_receiver>();
 	if (m_network->get_role() == network_role::nr_server) {
-		std::string final_title(TITLE);
-		final_title.append(SERVER_STR);
-		m_window.setTitle(final_title);
-
+		set_name(SERVER_STR);
 		m_game_impl = std::make_unique<server>();
 		m_game_impl->init();
 	}
 	if (m_network->get_role() == network_role::nr_client) {
-		std::string final_title(TITLE);
-		final_title.append(CLIENT_STR);
-		m_window.setTitle(final_title);
-
+		set_name(CLIENT_STR);
 		m_game_impl = std::make_unique<client>();
 		m_game_impl->init();
 	}
@@ -38,6 +32,12 @@ void game::run() {
 		m_game_impl->update(*m_network.get(), delta_time);
 		m_game_impl->render(m_window);
 	}
+}
+
+void game::set_name(const std::string &in_string) {
+	std::string final_title(TITLE);
+	final_title.append(in_string);
+	m_window.setTitle(final_title);
 }
 
 void game_instance::init() {
@@ -98,7 +98,7 @@ void server::update(network &in_network, float delta_time) {
 	}
 	m_court->p_player_two->set_movement(0);
 
-	if (m_frame_count % m_frame_divider == 0) {
+	if (m_frame_count % m_frame_module == 0) {
 		sf::Packet obj_pack;
 		for (objects::const_iterator it = m_court->get_objects().begin(); it != m_court->get_objects().end(); ++it) {
 			if ((*it)->m_global_idx == std::numeric_limits<unsigned int>::max()) continue;
@@ -130,7 +130,7 @@ void client::init() {
 	game_instance::init();
 
 	m_court->create_player(0);
-	m_court->create_player(1); // *m_controller.get(), 
+	m_court->create_player(1);
 }
 
 void client::update(network &in_network, float delta_time) {
@@ -141,7 +141,7 @@ void client::update(network &in_network, float delta_time) {
 }
 
 void client::handle_input(network &in_network, input_event in_input) {
-	if (m_frame_count % m_frame_divider != 0) return;
+	if (m_frame_count % m_frame_module != 0) return;
 	if (in_input == 0) return;
 	sf::Packet pack;
 	sf::Int8 data = in_input;

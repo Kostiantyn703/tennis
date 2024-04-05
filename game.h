@@ -20,14 +20,13 @@ public:
 
 private:
 	std::unique_ptr<network> m_network;
-
 	std::unique_ptr<game_instance> m_game_impl;
+	std::unique_ptr<input_receiver> m_input;
 
 	sf::RenderWindow m_window;
-
 	sf::Clock m_clock;
 
-	std::unique_ptr<input_receiver> m_input;
+	void set_name(const std::string &in_string);
 };
 
 class game_instance {
@@ -46,7 +45,7 @@ protected:
 	std::unique_ptr<icontroller> m_controller;
 
 	size_t m_frame_count = 0;
-	size_t m_frame_divider = 4;
+	size_t m_frame_module = 4;
 
 private:
 	void draw_score(sf::Text &out_score, int in_score, bool is_first_player);
