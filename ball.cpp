@@ -1,8 +1,6 @@
 #include "ball.h"
 #include "defs.h"
 #include "game.h"
-// TODO
-#include <iostream>
 
 constexpr float PADDLE_OFFSET_X = 10.f;
 constexpr float PADDLE_OFFSET_Y = 45.f;
@@ -10,8 +8,6 @@ constexpr float PADDLE_OFFSET_Y = 45.f;
 ball::ball() {
 	m_shape.setRadius(10.f);
 }
-
-ball::~ball() {}
 
 void ball::set_position(const sf::Vector2f in_position, size_t in_player_id, bool offset) {
 	sf::Vector2f new_pos = in_position;

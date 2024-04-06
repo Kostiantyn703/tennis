@@ -6,7 +6,7 @@
 class ball : public object {
 public:
 	ball();
-	virtual ~ball();
+	virtual ~ball() {}
 
 	virtual void on_set_position() override{
 		set_position(m_position, 0, false);
