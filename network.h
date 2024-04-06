@@ -4,6 +4,7 @@
 #include <vector>
 #include <SFML/Network.hpp>
 
+
 // socket data
 static const std::string SERVER_STR = "server";
 static const std::string CLIENT_STR = "client";
@@ -52,7 +53,7 @@ public:
 	void send_data(sf::Packet &in_packet, const std::string in_data_token);
 	void receive_data(court &in_court);
 	void receive_score(court &in_court);
-	void receive_input(court &in_court);
+	int receive_input(court &in_court);
 
 	network_role get_role() const { return m_config.m_role; }
 

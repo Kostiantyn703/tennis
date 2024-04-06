@@ -30,6 +30,7 @@ private:
 };
 
 class game_instance {
+	using controllers = std::vector<std::unique_ptr<icontroller>>;
 public: 
 	virtual ~game_instance() {}
 
@@ -40,7 +41,7 @@ public:
 
 protected:
 	std::unique_ptr<court> m_court;
-	std::unique_ptr<icontroller> m_controller;
+	controllers m_controllers;
 
 	size_t m_frame_count = 0;
 	size_t m_frame_module = 4;

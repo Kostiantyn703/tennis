@@ -42,7 +42,6 @@ void game_instance::init() {
 	if (!m_font.loadFromFile(FONT_PATH)) {
 		std::cout << "Failed to load font." << std::endl;
 	}
-	m_controller = std::make_unique<controller>();
 	m_court = std::make_unique<court>();
 	m_court->init();
 }
@@ -85,8 +84,10 @@ void game_instance::draw_score(sf::Text &out_score, int in_score, bool is_first_
 
 void server::init() {
 	game_instance::init();
-	m_court->p_player_one = m_court->create_player(*m_controller.get(), 0);
-	m_court->p_player_two = m_court->create_player(1);
+	m_controllers.push_back(std::make_unique<controller>());
+	m_court->p_player_one = m_court->create_player(*m_controllers[0], 0);
+	m_controllers.push_back(std::make_unique<controller>());
+	m_court->p_player_two = m_court->create_player(*m_controllers[1], 1);
 }
 
 void server::update(network &in_network, float delta_time) {
@@ -94,7 +95,6 @@ void server::update(network &in_network, float delta_time) {
 	if (m_court->check_ball_position()) {
 		on_score_change(in_network);
 	}
-	m_court->p_player_two->set_movement(0);
 
 	if (m_frame_count % m_frame_module == 0) {
 		sf::Packet obj_pack;
@@ -110,8 +110,9 @@ void server::update(network &in_network, float delta_time) {
 }
 
 void server::handle_input(network &in_network, input_event in_input) {
-	m_controller->process_input(in_input);
-	in_network.receive_input(*m_court.get());
+	m_controllers[0]->process_input(in_input);
+	input_event net_event = (input_event)in_network.receive_input(*m_court.get());
+	m_controllers[1]->process_input(net_event);
 }
 
 void server::on_score_change(network &in_network) {

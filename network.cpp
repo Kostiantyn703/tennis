@@ -70,20 +70,16 @@ void network::receive_score(court &in_court) {
 	packet.clear();
 }
 
-void network::receive_input(court &in_court) {
+int network::receive_input(court &in_court) {
 	sf::Packet packet;
 	sf::IpAddress addr;
 	unsigned short port = 0;
 	if (m_config.m_input_socket.receive(packet, addr, port) == sf::Socket::Status::Done) {
 		sf::Int8 data;
 		packet >> data;
-		if (data != 2) {
-			in_court.p_player_two->set_movement(data);
-		} else {
-			in_court.p_player_two->launch();
-		}
+		packet.clear();
+		return (int)data;
 	}
-	packet.clear();
 }
 
 
