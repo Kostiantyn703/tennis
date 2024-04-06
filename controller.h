@@ -46,5 +46,4 @@ protected:
 	virtual void move_down() override;
 	virtual void launch_ball() override;
 	virtual void stop_movement() override;
-	
 };

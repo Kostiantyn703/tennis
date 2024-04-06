@@ -53,7 +53,6 @@ private:
 	sf::Font m_font;
 };
 
-
 class server : public game_instance {
 public: 
 	server() { init(); }

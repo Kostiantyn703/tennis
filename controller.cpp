@@ -25,7 +25,6 @@ input_event input_receiver::receive_input(sf::RenderWindow &in_window) {
 	return m_last_event;
 }
 
-
 void icontroller::process_input(input_event in_event) {
 	switch (in_event) {
 	case input_event::ie_up:
