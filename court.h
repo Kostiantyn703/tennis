@@ -41,6 +41,8 @@ public:
 	void init();
 	player *create_player(icontroller &out_controller, size_t in_player_id);
 	player *create_player(size_t in_player_id);
+	void init_ball(player &in_player);
+	void init_ball();
 
 	void update(float delta_time);
 	bool check_ball_position();
@@ -59,10 +61,9 @@ private:
 	objects m_objects;
 	score_board m_score;
 
-	
 	ball *p_ball_slot = nullptr;
 
-	size_t m_winner = 0;
+	size_t m_loser = 0;
 
 	std::vector<sf::Vector2f> m_players_pos;
 };

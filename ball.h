@@ -9,27 +9,24 @@ public:
 	virtual ~ball();
 
 	virtual void on_set_position() override{
-		set_position(m_position, false);
+		set_position(m_position, 0, false);
 	}
 
-	void set_position(const sf::Vector2f in_position, bool offset = true);
+	void set_position(const sf::Vector2f in_position, size_t in_player_id, bool offset = true);
 	const sf::CircleShape &get_shape() const { return m_shape; }
 
 	void set_direction(float in_dir) { m_cur_direction = in_dir; }
-
-	size_t get_player_idx() const { return m_player_idx; }
 
 	virtual void update(float delta_time) override;
 	virtual void draw(sf::RenderWindow &in_window) override;
 
 	virtual bool intersect(object *in_obj) override;
-	// TODO
+
 	bool is_sticked = true;
 	
 private:
 	float m_cur_direction = 45.f;
 	float m_cur_speed = 500.f;
 
-	size_t m_player_idx = 0;
 	sf::CircleShape m_shape;
 };

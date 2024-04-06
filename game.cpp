@@ -88,6 +88,7 @@ void server::init() {
 	m_court->p_player_one = m_court->create_player(*m_controllers[0], 0);
 	m_controllers.push_back(std::make_unique<controller>());
 	m_court->p_player_two = m_court->create_player(*m_controllers[1], 1);
+	m_court->init_ball(*m_court->p_player_two);
 }
 
 void server::update(network &in_network, float delta_time) {
@@ -130,6 +131,7 @@ void client::init() {
 
 	m_court->create_player(0);
 	m_court->create_player(1);
+	m_court->init_ball();
 }
 
 void client::update(network &in_network, float delta_time) {

@@ -33,7 +33,7 @@ void player::update(float in_delta_time) {
 	move(offset);
 	set_position(m_position);
 	if (p_ball_slot) {
-		p_ball_slot->set_position(m_position);
+		p_ball_slot->set_position(m_position, m_player_id);
 	}
 }
 

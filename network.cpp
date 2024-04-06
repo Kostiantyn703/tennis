@@ -80,6 +80,7 @@ int network::receive_input(court &in_court) {
 		packet.clear();
 		return (int)data;
 	}
+	return std::numeric_limits<int>::min();
 }
 
 
