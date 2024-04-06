@@ -2,6 +2,8 @@
 
 #include <SFML/Graphics.hpp>
 
+class ball;
+
 class icontrollable {
 public:
 	virtual ~icontrollable() {}
@@ -11,6 +13,8 @@ public:
 
 	bool upper_block = false;
 	bool lower_block = false;
+
+	ball *p_ball_slot = nullptr;
 };
 
 class object {
@@ -21,4 +25,13 @@ public:
 	virtual void update(float delta_time) = 0;
 
 	virtual bool intersect(object *in_obj) = 0;
+	virtual void on_set_position() = 0;
+
+
+	unsigned int m_global_idx;
+
+	sf::Vector2f m_position;
+
+	bool is_moving = false;
+
 };

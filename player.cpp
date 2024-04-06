@@ -31,11 +31,9 @@ void player::draw(sf::RenderWindow &in_window) {
 void player::update(float in_delta_time) {
 	sf::Vector2f offset(0.f, m_cur_speed * in_delta_time);
 	move(offset);
-	if (m_ball_slot) {
-		m_ball_slot->set_position(m_position);
-	}
-	if (m_player_slot) {
-		m_player_slot->move(offset);
+	set_position(m_position);
+	if (p_ball_slot) {
+		p_ball_slot->set_position(m_position, m_player_id);
 	}
 }
 
@@ -62,9 +60,9 @@ bool player::on_intersect(const sf::FloatRect &in_rect, int &out_idx) {
 }
 
 void player::launch() {
-	if (m_ball_slot) {
-		m_ball_slot->is_sticked = false;
-		m_ball_slot = nullptr;
+	if (p_ball_slot) {
+		p_ball_slot->is_sticked = false;
+		p_ball_slot = nullptr;
 	}
 }
 
@@ -79,6 +77,13 @@ void player::set_position(const sf::Vector2f &in_pos) {
 }
 
 void player::move(sf::Vector2f &in_offset) {
+	if ((m_position.y + abs(in_offset.y) - m_position.y) < 0.001f) {
+		is_moving = false;
+	}
+	if ((m_position.y + abs(in_offset.y) - m_position.y) > 0.001f) {
+		is_moving = true;
+	}
+
 	for (shapes::iterator it = m_visual.m_shapes.begin(); it != m_visual.m_shapes.end(); ++it) {
 		it->move(in_offset);
 	}

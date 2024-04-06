@@ -28,20 +28,20 @@ public:
 	virtual void set_movement(int in_val) override { m_cur_speed = PLAYER_MAX_SPEED * in_val; }
 	virtual void launch() override;
 
-	size_t get_idx() const { return m_idx; }
-	void set_idx(size_t in_idx) { m_idx = in_idx; }
+	size_t get_player_id() const { return m_player_id; }
+	void set_player_id(size_t in_id) { m_player_id = in_id; }
 
 	const sf::Vector2f &get_position() const { return m_position; }
 	void set_position(const sf::Vector2f &in_pos);
 
+	virtual void on_set_position() override {
+		set_position(m_position);
+	}
+
 	void move(sf::Vector2f &in_offset);
 
-	ball *m_ball_slot = nullptr;
-	// TODO: temp for test
-	player *m_player_slot = nullptr;
 private:
-	size_t m_idx;
+	size_t m_player_id;
 	visual m_visual;
-	sf::Vector2f m_position;
 	float m_cur_speed = 0.f;
 };

@@ -8,7 +8,8 @@
 
 using objects = std::vector<object*>;
 
-class controller;
+class game_instance;
+class icontroller;
 
 class border : public object {
 public:
@@ -17,6 +18,7 @@ public:
 
 	virtual void draw(sf::RenderWindow &in_window) override;
 	virtual void update(float delta_time) override {}
+	virtual void on_set_position() override {}
 
 	virtual bool intersect(object *in_obj) override { return false; }
 
@@ -27,8 +29,8 @@ private:
 };
 
 struct score_board {
-	int player_one = 0;
-	int player_two = 0;
+	sf::Uint16 player_one = 0;
+	sf::Uint16 player_two = 0;
 };
 
 class court {
@@ -37,21 +39,31 @@ public:
 	~court();
 
 	void init();
-	void init_player(controller &out_controller);
+	player *create_player(icontroller &out_controller, size_t in_player_id);
+	player *create_player(size_t in_player_id);
+	void init_ball(player &in_player);
+	void init_ball();
 
 	void update(float delta_time);
+	bool check_ball_position();
 
 	const objects &get_objects() const { return m_objects; }
 	const score_board &get_score() const { return m_score; }
+
+	void set_score(score_board &in_score) { m_score = in_score; }
+
+	void restart();
+
+	player *p_player_one = nullptr;
+	player *p_player_two = nullptr;
 
 private:
 	objects m_objects;
 	score_board m_score;
 
-	player *m_player_one = nullptr;
-	ball *m_ball_slot = nullptr;
+	ball *p_ball_slot = nullptr;
+
+	size_t m_loser = 0;
 
 	std::vector<sf::Vector2f> m_players_pos;
-
-	void restart();
 };

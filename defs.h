@@ -1,7 +1,7 @@
 #pragma once
 
-static const char *TITLE		= "TENNIS";
-static const char *FONT_PATH	= "../content/score_font.ttf";
+static const char *TITLE		= "TENNIS ";
+static const char *FONT_PATH	= "score_font.ttf";
 
 constexpr size_t WINDOW_HEIGHT	= 600;
 constexpr size_t WINDOW_WIDTH	= 800;

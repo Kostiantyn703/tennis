@@ -1,8 +1,6 @@
 #include "ball.h"
 #include "defs.h"
 #include "game.h"
-// TODO
-#include <iostream>
 
 constexpr float PADDLE_OFFSET_X = 10.f;
 constexpr float PADDLE_OFFSET_Y = 45.f;
@@ -11,15 +9,21 @@ ball::ball() {
 	m_shape.setRadius(10.f);
 }
 
-ball::~ball() {}
-
-void ball::set_position(const sf::Vector2f in_position) {
+void ball::set_position(const sf::Vector2f in_position, size_t in_player_id, bool offset) {
 	sf::Vector2f new_pos = in_position;
-	// TODO: also depending on player idx set initial direction
-	m_player_idx == 0 ? (new_pos.x += PADDLE_OFFSET_X) : (new_pos.x -= PADDLE_OFFSET_X);
-	new_pos.y += PADDLE_OFFSET_Y;
+	if (offset) {
+		in_player_id == 0 ? (new_pos.x += PADDLE_OFFSET_X) : (new_pos.x -= PADDLE_OFFSET_X * 2);
+		new_pos.y += PADDLE_OFFSET_Y;
+	}
 
 	m_shape.setPosition(new_pos);
+	if (abs(m_position.y - new_pos.y) < 0.001f) {
+		is_moving = false;
+	}
+	if (abs(m_position.y - new_pos.y) > 0.001f) {
+		is_moving = true;
+	}
+	m_position = new_pos;
 }
 
 void ball::update(float delta_time) {
@@ -29,6 +33,7 @@ void ball::update(float delta_time) {
 		sf::Vector2f offset(delta_x, delta_y);
 		m_shape.move(offset);
 	}
+	set_position(m_shape.getPosition(), 0, false);
 }
 
 void ball::draw(sf::RenderWindow &in_window) {
