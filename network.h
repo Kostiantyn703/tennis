@@ -48,9 +48,10 @@ struct network_config {
 class network {
 public:
 	network();
-	~network() {}
+	~network();
 
 	void send_data(sf::Packet &in_packet, const std::string in_data_token);
+	void send_objs_data(const std::vector<float> in_data);
 	void receive_data(court &in_court);
 	void receive_score(court &in_court);
 	int receive_input(court &in_court);

@@ -97,14 +97,15 @@ void server::update(network &in_network, float delta_time) {
 		on_score_change(in_network);
 	}
 
-	if (m_frame_count % m_frame_module == 0) {
-		sf::Packet obj_pack;
+	if (m_frame_count % m_frame_modulo == 0) {
 		for (objects::const_iterator it = m_court->get_objects().begin(); it != m_court->get_objects().end(); ++it) {
 			if ((*it)->m_global_idx == std::numeric_limits<unsigned int>::max()) continue;
 			if (!(*it)->is_moving) continue;
-			obj_pack << (*it)->m_global_idx << (*it)->m_position.x << (*it)->m_position.y;
-			in_network.send_data(obj_pack, OBJECTS_TOKEN);
-			obj_pack.clear();
+			std::vector<float> data;
+			data.push_back((float)(*it)->m_global_idx);
+			data.push_back((*it)->m_position.x);
+			data.push_back((*it)->m_position.y);
+			in_network.send_objs_data(data);
 		}
 	}
 	m_frame_count++;
@@ -142,7 +143,6 @@ void client::update(network &in_network, float delta_time) {
 }
 
 void client::handle_input(network &in_network, input_event in_input) {
-	if (m_frame_count % m_frame_module != 0) return;
 	if (in_input == 0) return;
 	sf::Packet pack;
 	sf::Int8 data = in_input;

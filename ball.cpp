@@ -2,11 +2,14 @@
 #include "defs.h"
 #include "game.h"
 
+#include <iostream>
+
 constexpr float PADDLE_OFFSET_X = 10.f;
 constexpr float PADDLE_OFFSET_Y = 45.f;
 
 ball::ball() {
 	m_shape.setRadius(10.f);
+	is_moving = true;
 }
 
 void ball::set_position(const sf::Vector2f in_position, size_t in_player_id, bool offset) {
@@ -17,12 +20,6 @@ void ball::set_position(const sf::Vector2f in_position, size_t in_player_id, boo
 	}
 
 	m_shape.setPosition(new_pos);
-	if (abs(m_position.y - new_pos.y) < 0.001f) {
-		is_moving = false;
-	}
-	if (abs(m_position.y - new_pos.y) > 0.001f) {
-		is_moving = true;
-	}
 	m_position = new_pos;
 }
 

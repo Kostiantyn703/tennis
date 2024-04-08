@@ -44,7 +44,7 @@ protected:
 	controllers m_controllers;
 
 	size_t m_frame_count = 0;
-	size_t m_frame_module = 4;
+	size_t m_frame_modulo = 4;
 
 	virtual void init();
 private:
