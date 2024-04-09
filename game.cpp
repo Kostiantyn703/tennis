@@ -101,10 +101,7 @@ void server::update(network &in_network, float delta_time) {
 		for (objects::const_iterator it = m_court->get_objects().begin(); it != m_court->get_objects().end(); ++it) {
 			if ((*it)->m_global_idx == std::numeric_limits<unsigned int>::max()) continue;
 			if (!(*it)->is_moving) continue;
-			std::vector<float> data;
-			data.push_back((float)(*it)->m_global_idx);
-			data.push_back((*it)->m_position.x);
-			data.push_back((*it)->m_position.y);
+			float data[4] { (float)(*it)->m_global_idx , (*it)->m_position.x, (*it)->m_position.y };
 			in_network.send_objs_data(data);
 		}
 	}

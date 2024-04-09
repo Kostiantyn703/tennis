@@ -33,9 +33,9 @@ void network::send_data(sf::Packet &in_packet, const std::string in_data_token) 
 	}
 }
 
-void network::send_objs_data(const std::vector<float> in_data) {
+void network::send_objs_data(const float *in_data) {
 	std::cout << "Send idx = " << in_data[0] << " x = " << in_data[1] << " y = " << in_data[2] << std::endl;
-	m_config.m_objects_socket.send(in_data.data(), 16, m_config.m_address, CLIENT_OBJECTS_PORT);
+	m_config.m_objects_socket.send(in_data, 16, m_config.m_address, CLIENT_OBJECTS_PORT);
 }
 
 void network::receive_data(court &in_court) {
@@ -58,7 +58,6 @@ void network::receive_data(court &in_court) {
 			(*it)->m_position = cur_pos;
 			(*it)->on_set_position();
 		}
-		
 	}
 }
 
